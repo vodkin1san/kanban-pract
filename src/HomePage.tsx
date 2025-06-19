@@ -1,9 +1,11 @@
+import { Link as MuiLink } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+
 const HomePage = () => {
   return (
-    <div>
-      <h1>Columns Page</h1>
-      <p>This is the login form. (To be implemented)</p>
-    </div>
+    <MuiLink component={RouterLink} to={"/signup"} variant="body2">
+      {"На тест поля регистрации"}
+    </MuiLink>
   );
 };
 
