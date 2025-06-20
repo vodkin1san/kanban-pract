@@ -3,7 +3,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Typography, Container, Box, Link as MuiLink } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-// useNavigate
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { useNavigate } from "react-router-dom";
 
 const mySchem = z
   .object({
@@ -30,11 +32,28 @@ const SignupPage = () => {
       password: "",
       confirmPassword: "",
     },
-    // mode: "onBlur",
   });
 
-  const onSubmit = (data: SignupFormInputs) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: SignupFormInputs) => {
     console.log(data);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      console.log("Пользователь успешно зарегистрировался!", userCredential.user);
+      navigate("/");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Ошибка регистрации", error.code, error.message);
+      let errorMessage = "Произошла ошибка регистрации, попробуйте повторить попытку!";
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "Этот email уже зарегистрирован. Пожалуйства используйте другой.";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "Пароль слишком простой, используйте более сложный";
+      }
+      alert(`Ошибка: ${errorMessage}`);
+    }
   };
   return (
     <>
