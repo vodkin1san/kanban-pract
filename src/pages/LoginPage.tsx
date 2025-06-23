@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userSlice";
 
 const mySchem = z.object({
   email: z.string().email("Неверный формат email"),
@@ -28,6 +30,7 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data: LoginFormInputs) => {
     console.log(data);
@@ -35,6 +38,7 @@ const LoginPage = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
       console.log("Пользователь вошёл: ", userCredential.user);
+      dispatch(setUser({ uid: userCredential.user.uid, email: userCredential.user.email }));
       navigate("/");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

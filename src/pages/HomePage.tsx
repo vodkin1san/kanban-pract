@@ -2,13 +2,17 @@ import { Link as MuiLink, Button } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config";
+import { useDispatch } from "react-redux";
+import { clearUser } from "../store/userSlice";
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   const navigator = useNavigate();
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      dispatch(clearUser());
       navigator("/login");
     } catch (error) {
       console.error("Выход не удался: ", error);

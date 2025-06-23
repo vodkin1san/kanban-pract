@@ -6,6 +6,8 @@ import { Link as RouterLink } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userSlice";
 
 const mySchem = z
   .object({
@@ -35,6 +37,7 @@ const SignupPage = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data: SignupFormInputs) => {
     console.log(data);
@@ -42,6 +45,7 @@ const SignupPage = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
       console.log("Пользователь успешно зарегистрировался!", userCredential.user);
+      dispatch(setUser({ uid: userCredential.user.uid, email: userCredential.user.email }));
       navigate("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
