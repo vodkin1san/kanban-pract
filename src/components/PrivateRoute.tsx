@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
 import { auth } from "../firebase/config.ts";
+import AppRoutes from "../enums/routes.tsx";
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,9 +15,8 @@ const PrivateRoute = () => {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
-        navigate("/login");
+        navigate(AppRoutes.LOGIN);
       }
-
       setIsLoading(false);
     });
     return () => {

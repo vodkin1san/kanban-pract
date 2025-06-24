@@ -5,16 +5,17 @@ import { HomePage } from "./pages/HomePage";
 import { SignupPage } from "./pages/SignupPage";
 import { LoginPage } from "./pages/LoginPage";
 import { PrivateRoute } from "./components/PrivateRoute";
+import AppRoutesEnum from "./enums/routes";
 
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />}></Route>
-      <Route path="/signup" element={<SignupPage />}></Route>
+      <Route path={AppRoutesEnum.LOGIN} element={<LoginPage />}></Route>
+      <Route path={AppRoutesEnum.SIGNUP} element={<SignupPage />}></Route>
       <Route element={<PrivateRoute />}>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/tasks" element={<TasksPage />}></Route>
-        <Route path="/columns" element={<ColumnsPage />}></Route>
+        <Route path={AppRoutesEnum.HOME} element={<HomePage />}></Route>
+        <Route path={AppRoutesEnum.TASKS} element={<TasksPage />}></Route>
+        <Route path={AppRoutesEnum.COLUMNS} element={<ColumnsPage />}></Route>
       </Route>
     </Routes>
   );
