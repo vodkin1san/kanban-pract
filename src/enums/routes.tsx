@@ -1,9 +1,9 @@
-enum RoutesEnum {
-  LOGIN = "/login",
-  SIGNUP = "/signup",
-  HOME = "/",
-  TASKS = "/tasks",
-  COLUMNS = "/columns",
-}
+const RoutesEnum = {
+  LOGIN: "/login",
+  SIGNUP: "/signup",
+  HOME: "/",
+  TASKS: "/tasks",
+  COLUMNS: "/columns",
+} as const;
 
 export default RoutesEnum;
