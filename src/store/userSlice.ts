@@ -1,22 +1,73 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { getFirebaseErrorMessage } from "../utils/firebaseErrors";
 
-const initialState = {
+interface UserState {
+  uid: string | null;
+  email: string | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: UserState = {
   uid: null,
   email: null,
+  isLoading: false,
+  error: null,
 };
+
+export const loginUser = createAsyncThunk(
+  "user/login",
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+      };
+    } catch (error) {
+      const errorMessage = getFirebaseErrorMessage(error);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action) => {
+    setUser: (state, action: PayloadAction<{ uid: string | null; email: string | null }>) => {
       state.uid = action.payload.uid;
       state.email = action.payload.email;
+      state.isLoading = false;
+      state.error = null;
     },
     clearUser: (state) => {
       state.uid = null;
       state.email = null;
+      state.isLoading = false;
+      state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.uid = action.payload.uid;
+        state.email = action.payload.email;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.uid = null;
+        state.email = null;
+        state.error = action.payload as string;
+      });
   },
 });
 

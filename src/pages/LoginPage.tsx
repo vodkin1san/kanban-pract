@@ -3,14 +3,14 @@ import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/config";
+
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUser } from "../store/userSlice";
+
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { loginUser } from "../store/userSlice";
+
 import AppRoutes from "../enums/routes";
 import loginScheme from "../schemas/LoginScheme";
-import { getFirebaseErrorMessage } from "../utils/firebaseErrors";
 
 const LoginPage = () => {
   type LoginFormInputs = z.infer<typeof loginScheme>;
@@ -28,16 +28,13 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+
   const onSubmit = async (data: LoginFormInputs) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-      dispatch(setUser({ uid: userCredential.user.uid, email: userCredential.user.email }));
+    const resultAction = await dispatch(loginUser({ email: data.email, password: data.password }));
+    if (loginUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
-    } catch (error) {
-      console.error("Ошибка входа", error);
-      const errorMessage = getFirebaseErrorMessage(error);
-      console.log(`Ошибка: ${errorMessage}`);
     }
   };
 
@@ -45,8 +42,8 @@ const LoginPage = () => {
     <>
       <Container maxWidth="xs">
         <Box
-          component="form"
           noValidate
+          component="form"
           onSubmit={handleSubmit(onSubmit)}
           sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 8 }}
         >
@@ -59,12 +56,12 @@ const LoginPage = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Email адрес"
-                type="email"
                 required
+                id="email"
+                type="email"
+                label="Email адрес"
                 fullWidth
                 margin="normal"
-                id="email"
                 error={!!errors.email}
                 helperText={errors.email?.message}
               />
@@ -76,20 +73,31 @@ const LoginPage = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Пароль"
-                type="password"
                 required
+                id="password"
+                type="password"
+                label="Пароль"
                 fullWidth
                 margin="normal"
-                id="password"
                 error={!!errors.password}
                 helperText={errors.password?.message}
               />
             )}
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Войти
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Вход..." : "Войти"}
           </Button>
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              Ошибка: {error}
+            </Typography>
+          )}
           <MuiLink component={RouterLink} to={AppRoutes.SIGNUP}>
             {"Еще нет аккаунта? Зарегистрироваться"}
           </MuiLink>
