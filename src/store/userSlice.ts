@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { getFirebaseErrorMessage } from "../utils/firebaseErrors";
 
@@ -22,6 +22,22 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+      };
+    } catch (error) {
+      const errorMessage = getFirebaseErrorMessage(error);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  "user/register",
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       return {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -63,6 +79,23 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.uid = null;
+        state.email = null;
+        state.error = action.payload as string;
+      });
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.uid = action.payload.uid;
+        state.email = action.payload.email;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
         state.uid = null;
         state.email = null;
