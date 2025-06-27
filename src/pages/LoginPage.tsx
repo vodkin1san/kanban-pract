@@ -1,20 +1,16 @@
 import { TextField, Button, Typography, Container, Box, Link as MuiLink } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
+// import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useNavigate } from "react-router-dom";
-
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginUser } from "../store/userSlice";
-
 import AppRoutes from "../enums/routes";
 import loginScheme from "../schemas/LoginScheme";
+import type { LoginFormInputs } from "../schemas/LoginScheme";
 
 const LoginPage = () => {
-  type LoginFormInputs = z.infer<typeof loginScheme>;
-
   const {
     handleSubmit,
     control,

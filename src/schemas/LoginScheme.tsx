@@ -5,4 +5,5 @@ const myScheme = z.object({
   password: z.string().min(1, "Пожалуйста, введите пароль"),
 });
 
+export type LoginFormInputs = z.infer<typeof myScheme>;
 export default myScheme;
