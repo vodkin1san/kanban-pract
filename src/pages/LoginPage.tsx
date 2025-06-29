@@ -52,10 +52,10 @@ const LoginPage = () => {
               <TextField
                 {...field}
                 required
+                fullWidth
                 id="email"
                 type="email"
                 label="Email адрес"
-                fullWidth
                 margin="normal"
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -69,10 +69,10 @@ const LoginPage = () => {
               <TextField
                 {...field}
                 required
+                fullWidth
                 id="password"
                 type="password"
                 label="Пароль"
-                fullWidth
                 margin="normal"
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -80,8 +80,8 @@ const LoginPage = () => {
             )}
           />
           <Button
-            type="submit"
             fullWidth
+            type="submit"
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}

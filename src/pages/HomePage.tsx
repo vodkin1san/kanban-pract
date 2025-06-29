@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import RoutesEnum from "../enums/routes";
+import AppRoutes from "../enums/routes";
 
 const HomePage = () => {
   return (
@@ -7,10 +7,10 @@ const HomePage = () => {
       <h1>Home Page</h1>
       <p>This is the HomePage form. (To be implemented)</p>
       <p>
-        Перейти на страницу входа: <Link to={RoutesEnum.LOGIN}>Login</Link>
+        Перейти на страницу входа: <Link to={AppRoutes.LOGIN}>Login</Link>
       </p>
       <p>
-        Перейти на страницу регистрации: <Link to={RoutesEnum.SIGNUP}>SignUp</Link>
+        Перейти на страницу регистрации: <Link to={AppRoutes.SIGNUP}>SignUp</Link>
       </p>
     </div>
   );

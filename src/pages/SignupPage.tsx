@@ -1,8 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Typography, Container, Box, Link as MuiLink } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { registerUser } from "../store/userSlice";
 import AppRoutes from "../enums/routes";
@@ -54,10 +53,10 @@ const SignupPage = () => {
               <TextField
                 {...field}
                 required
+                fullWidth
                 id="email"
                 label="Email адрес"
                 type="email"
-                fullWidth
                 margin="normal"
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -71,10 +70,10 @@ const SignupPage = () => {
               <TextField
                 {...field}
                 required
+                fullWidth
                 id="password"
                 label="Пароль"
                 type="password"
-                fullWidth
                 margin="normal"
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -88,10 +87,10 @@ const SignupPage = () => {
               <TextField
                 {...field}
                 required
+                fullWidth
                 id="confirmPassword"
                 label="Повторите пароль"
                 type="password"
-                fullWidth
                 margin="normal"
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
@@ -99,8 +98,8 @@ const SignupPage = () => {
             )}
           />
           <Button
-            type="submit"
             fullWidth
+            type="submit"
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
