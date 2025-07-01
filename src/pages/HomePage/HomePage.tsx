@@ -1,12 +1,12 @@
 import { useNavigate, Link } from "react-router-dom";
-import AppRoutes from "../enums/routes";
+import AppRoutes from "../../enums/routes";
 import { Button, Alert } from "@mui/material";
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
-import { ColumnsList } from "../moduls/columns/ColumnsList/index";
-import { useAppDispatch } from "../store/hooks";
-import { logoutUser } from "../store/userSlice";
-import { ModalWrapper } from "../moduls/columns/ModalWrapper/index";
+import { ColumnsList } from "../../moduls/columns/ColumnsList/index";
+import { useAppDispatch } from "../../store/hooks";
+import { logoutUser } from "../../store/userSlice";
+import { ModalWrapper } from "../../moduls/columns/ModalWrapper/index";
 
 const HomePage = () => {
   const navigate = useNavigate();
