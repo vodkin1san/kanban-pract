@@ -6,7 +6,7 @@ import { useAppDispatch } from "./store/hooks";
 import { setUser, clearUser } from "./store/userSlice";
 import { ColumnsPage } from "./pages/ColumnsPage";
 import { TasksPage } from "./pages/TasksPage";
-import { HomePage } from "./pages/HomePage";
+import { HomePage } from "./pages/HomePage/HomePage.tsx";
 import { SignupPage } from "./pages/SignupPage";
 import { LoginPage } from "./pages/LoginPage";
 import { PrivateRoute } from "./components/PrivateRoute";
