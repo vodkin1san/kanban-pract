@@ -32,52 +32,6 @@ const initialState: ColumnState = columnsAdapter.getInitialState({
   error: null,
 });
 
-const columnSlice = createSlice({
-  name: "column",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(createColumn.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        createColumn.fulfilled,
-        (state, action: PayloadAction<Column>) => {
-          state.isLoading = false;
-          state.error = null;
-          columnsAdapter.addOne(state, action.payload);
-        },
-      )
-      .addCase(createColumn.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          (action.payload as string) ||
-          "Неизвестная ошибка при создании колонки";
-      })
-      .addCase(fetchColumn.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchColumn.fulfilled,
-        (state, action: PayloadAction<Column[]>) => {
-          state.isLoading = false;
-          state.error = null;
-          columnsAdapter.setAll(state, action.payload);
-        },
-      )
-      .addCase(fetchColumn.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          (action.payload as string) ||
-          "Неизвестная ошибка при создании колонки";
-        columnsAdapter.removeAll(state);
-      });
-  },
-});
-
 const createColumn = createAsyncThunk(
   "columns/createColumn",
   async (
@@ -126,6 +80,52 @@ const fetchColumn = createAsyncThunk(
     }
   },
 );
+
+const columnSlice = createSlice({
+  name: "column",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createColumn.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        createColumn.fulfilled,
+        (state, action: PayloadAction<Column>) => {
+          state.isLoading = false;
+          state.error = null;
+          columnsAdapter.addOne(state, action.payload);
+        },
+      )
+      .addCase(createColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          (action.payload as string) ||
+          "Неизвестная ошибка при создании колонки";
+      })
+      .addCase(fetchColumn.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchColumn.fulfilled,
+        (state, action: PayloadAction<Column[]>) => {
+          state.isLoading = false;
+          state.error = null;
+          columnsAdapter.setAll(state, action.payload);
+        },
+      )
+      .addCase(fetchColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          (action.payload as string) ||
+          "Неизвестная ошибка при создании колонки";
+        columnsAdapter.removeAll(state);
+      });
+  },
+});
 
 export const {
   selectAll: selectAllColumns,

@@ -1,26 +1,17 @@
 import { useNavigate, Link } from "react-router-dom";
 import AppRoutes from "../enums/routes";
-import { Button, Dialog } from "@mui/material";
-import { useState } from "react";
+import { Button, Alert } from "@mui/material";
 import { useAppSelector } from "../store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "../moduls/columns/ColumnsList/index";
 import { useAppDispatch } from "../store/hooks";
 import { logoutUser } from "../store/userSlice";
+import { ModalWrapper } from "../moduls/columns/ModalWrapper/index";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user.uid);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   const handleLogout = async () => {
     const resultAction = await dispatch(logoutUser());
@@ -41,16 +32,28 @@ const HomePage = () => {
         Перейти на страницу регистрации:{" "}
         <Link to={AppRoutes.SIGNUP}>SignUp</Link>
       </p>
-      <Button sx={{ mr: 3 }} onClick={handleOpenModal}>
-        Создать колонку
-      </Button>
-      <Dialog open={isModalOpen} onClose={handleCloseModal}>
-        <CreateColumnForm onCancel={handleCloseModal} />
-      </Dialog>
-      <ColumnsList userId={userId} />
-      <Button sx={{ mr: 3 }} onClick={handleLogout}>
-        Выйти
-      </Button>
+
+      {userId ? (
+        <>
+          <ModalWrapper openButtonText="Создать колонку">
+            {(onClose) => (
+              <CreateColumnForm
+                onCancel={onClose}
+                onSuccess={onClose}
+                userId={userId}
+              />
+            )}
+          </ModalWrapper>
+          <ColumnsList userId={userId} />
+          <Button sx={{ mr: 3 }} onClick={handleLogout}>
+            Выйти
+          </Button>
+        </>
+      ) : (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          Пожалуйста, авторизуйтесь, чтобы управлять колонками.
+        </Alert>
+      )}
     </div>
   );
 };

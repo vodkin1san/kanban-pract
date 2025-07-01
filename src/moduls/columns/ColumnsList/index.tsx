@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { Box, Alert } from "@mui/material";
+import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { fetchColumn, selectAllColumns } from "../../../store/columnSlice";
 
 export interface ColumnsListProps {
-  userId: string | null;
+  userId: string;
 }
 
 const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
@@ -14,18 +14,8 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
   const error = useAppSelector((state) => state.column.error);
 
   useEffect(() => {
-    if (userId) {
-      dispatch(fetchColumn(userId));
-    }
+    dispatch(fetchColumn(userId));
   }, [dispatch, userId]);
-
-  if (!userId) {
-    return (
-      <Alert severity="info" sx={{ mt: 2 }}>
-        Пожалуйста, авторизуйтесь, чтобы видеть свои колонки.
-      </Alert>
-    );
-  }
 
   if (isLoading) {
     return <p>Загрузка колонок...</p>;

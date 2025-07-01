@@ -1,19 +1,22 @@
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { createColumn } from "../store/columnSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import columnFormSchema from "../schemas/CreateColumnSchema";
+import type { CreateColumnFormInputs } from "../schemas/CreateColumnSchema";
 
 interface CreateColumnFormProps {
   onCancel: () => void;
+  onSuccess: () => void;
+  userId: string;
 }
 
-const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
-  type CreateColumnFormInputs = z.infer<typeof columnFormSchema>;
-
-  const userId = useAppSelector((state) => state.user.uid);
+const CreateColumnForm = ({
+  onCancel,
+  onSuccess,
+  userId,
+}: CreateColumnFormProps) => {
   const { isLoading } = useAppSelector((state) => state.column);
   const dispatch = useAppDispatch();
 
@@ -29,17 +32,11 @@ const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
   });
 
   const onSubmit = async (data: CreateColumnFormInputs) => {
-    console.log("Данные формы колонки: ", data);
-
-    if (userId) {
-      const resultAction = await dispatch(
-        createColumn({ name: data.name, userId: userId }),
-      );
-      if (createColumn.fulfilled.match(resultAction)) {
-        onCancel();
-      }
-    } else {
-      console.error("Пользователь не авторизован. Не могу создать колонку.");
+    const resultAction = await dispatch(
+      createColumn({ name: data.name, userId: userId }),
+    );
+    if (createColumn.fulfilled.match(resultAction)) {
+      onSuccess();
     }
   };
 
@@ -70,11 +67,7 @@ const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
               />
             )}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={!userId || isLoading}
-          >
+          <Button type="submit" variant="contained" disabled={isLoading}>
             {isLoading ? "Создание..." : "Создать"}
           </Button>
           <Button onClick={onCancel} variant="outlined" disabled={isLoading}>
