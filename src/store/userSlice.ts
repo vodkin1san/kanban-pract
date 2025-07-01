@@ -53,7 +53,6 @@ export const registerUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
   try {
     await signOut(auth);
-    return undefined;
   } catch (error) {
     const errorMessage = getFirebaseErrorMessage(error);
     return rejectWithValue(errorMessage);

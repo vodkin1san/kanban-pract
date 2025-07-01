@@ -1,4 +1,9 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
+import { auth } from "./firebase/config.ts";
+import { useAppDispatch } from "./store/hooks";
+import { setUser, clearUser } from "./store/userSlice";
 import { ColumnsPage } from "./pages/ColumnsPage";
 import { TasksPage } from "./pages/TasksPage";
 import { HomePage } from "./pages/HomePage";
@@ -8,6 +13,20 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import AppRoutes from "./enums/routes";
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const unsubscribe = firebaseAuthListener(auth, (user) => {
+      if (user) {
+        dispatch(setUser({ uid: user.uid, email: user.email }));
+      } else {
+        dispatch(clearUser());
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [dispatch]);
   return (
     <Routes>
       <Route path={AppRoutes.LOGIN} element={<LoginPage />} />
