@@ -4,15 +4,15 @@ import { Button, Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppSelector } from "../store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
-import { ColumnsList } from "../components/ColumnsList";
+import { ColumnsList } from "../moduls/columns/ColumnsList/index";
 import { useAppDispatch } from "../store/hooks";
 import { logoutUser } from "../store/userSlice";
 
 const HomePage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const userId = useAppSelector((state) => state.user.uid);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.user.uid);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -38,7 +38,8 @@ const HomePage = () => {
         Перейти на страницу входа: <Link to={AppRoutes.LOGIN}>Login</Link>
       </p>
       <p>
-        Перейти на страницу регистрации: <Link to={AppRoutes.SIGNUP}>SignUp</Link>
+        Перейти на страницу регистрации:{" "}
+        <Link to={AppRoutes.SIGNUP}>SignUp</Link>
       </p>
       <Button sx={{ mr: 3 }} onClick={handleOpenModal}>
         Создать колонку

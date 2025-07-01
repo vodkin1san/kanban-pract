@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { Box, Alert } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchColumn } from "../../store/columnSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { fetchColumn, selectAllColumns } from "../../../store/columnSlice";
 
-interface ColumnsListProps {
+export interface ColumnsListProps {
   userId: string | null;
 }
 
 const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
   const dispatch = useAppDispatch();
-  const columns = useAppSelector((state) => state.column.items);
+  const columns = useAppSelector(selectAllColumns);
   const isLoading = useAppSelector((state) => state.column.isLoading);
   const error = useAppSelector((state) => state.column.error);
 

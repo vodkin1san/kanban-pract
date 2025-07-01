@@ -1,12 +1,19 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField, Button, Typography, Container, Box, Link as MuiLink } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { registerUser } from "../store/userSlice";
 import AppRoutes from "../enums/routes";
-import signupScheme from "../schemas/SignupScheme";
-import type { SignupFormInputs } from "../schemas/SignupScheme";
+import signupSchema from "../schemas/SignupSchema";
+import type { SignupFormInputs } from "../schemas/SignupSchema";
 
 const SignupPage = () => {
   const {
@@ -14,7 +21,7 @@ const SignupPage = () => {
     control,
     formState: { errors },
   } = useForm<SignupFormInputs>({
-    resolver: zodResolver(signupScheme),
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -28,7 +35,7 @@ const SignupPage = () => {
 
   const onSubmit = async (data: SignupFormInputs) => {
     const resultAction = await dispatch(
-      registerUser({ email: data.email, password: data.password })
+      registerUser({ email: data.email, password: data.password }),
     );
     if (registerUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
@@ -41,7 +48,12 @@ const SignupPage = () => {
           noValidate
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 8 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 8,
+          }}
         >
           <Typography component="h1" variant="h5">
             Регистрация

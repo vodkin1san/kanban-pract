@@ -2,17 +2,16 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Box, Typography } from "@mui/material";
-
 import { createColumn } from "../store/columnSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import columnFormSchem from "../schemas/CreateColumnScheme";
+import columnFormSchema from "../schemas/CreateColumnSchema";
 
 interface CreateColumnFormProps {
   onCancel: () => void;
 }
 
 const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
-  type CreateColumnFormInputs = z.infer<typeof columnFormSchem>;
+  type CreateColumnFormInputs = z.infer<typeof columnFormSchema>;
 
   const userId = useAppSelector((state) => state.user.uid);
   const { isLoading } = useAppSelector((state) => state.column);
@@ -23,7 +22,7 @@ const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
     control,
     formState: { errors },
   } = useForm<CreateColumnFormInputs>({
-    resolver: zodResolver(columnFormSchem),
+    resolver: zodResolver(columnFormSchema),
     defaultValues: {
       name: "",
     },
@@ -33,7 +32,9 @@ const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
     console.log("Данные формы колонки: ", data);
 
     if (userId) {
-      const resultAction = await dispatch(createColumn({ name: data.name, userId: userId }));
+      const resultAction = await dispatch(
+        createColumn({ name: data.name, userId: userId }),
+      );
       if (createColumn.fulfilled.match(resultAction)) {
         onCancel();
       }
@@ -69,7 +70,11 @@ const CreateColumnForm = ({ onCancel }: CreateColumnFormProps) => {
               />
             )}
           />
-          <Button type="submit" variant="contained" disabled={!userId || isLoading}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!userId || isLoading}
+          >
             {isLoading ? "Создание..." : "Создать"}
           </Button>
           <Button onClick={onCancel} variant="outlined" disabled={isLoading}>

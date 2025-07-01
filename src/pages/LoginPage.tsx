@@ -1,4 +1,11 @@
-import { TextField, Button, Typography, Container, Box, Link as MuiLink } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginUser } from "../store/userSlice";
 import AppRoutes from "../enums/routes";
-import loginScheme from "../schemas/LoginScheme";
-import type { LoginFormInputs } from "../schemas/LoginScheme";
+import loginSchema from "../schemas/LoginSchema";
+import type { LoginFormInputs } from "../schemas/LoginSchema";
 
 const LoginPage = () => {
   const {
@@ -15,7 +22,7 @@ const LoginPage = () => {
     control,
     formState: { errors },
   } = useForm<LoginFormInputs>({
-    resolver: zodResolver(loginScheme),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -27,7 +34,9 @@ const LoginPage = () => {
   const { isLoading, error } = useAppSelector((state) => state.user);
 
   const onSubmit = async (data: LoginFormInputs) => {
-    const resultAction = await dispatch(loginUser({ email: data.email, password: data.password }));
+    const resultAction = await dispatch(
+      loginUser({ email: data.email, password: data.password }),
+    );
     if (loginUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
     }
@@ -40,7 +49,12 @@ const LoginPage = () => {
           noValidate
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 8 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 8,
+          }}
         >
           <Typography component="h1" variant="h5">
             Авторизация
