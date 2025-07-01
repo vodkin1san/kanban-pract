@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AppRoutes from "../enums/routes";
 import { Button, Dialog } from "@mui/material";
 import { useState } from "react";
 import { useAppSelector } from "../store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "../components/ColumnsList";
+import { useAppDispatch } from "../store/hooks";
+import { logoutUser } from "../store/userSlice";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = useAppSelector((state) => state.user.uid);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -16,6 +20,14 @@ const HomePage = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleLogout = async () => {
+    const resultAction = await dispatch(logoutUser());
+
+    if (logoutUser.fulfilled.match(resultAction)) {
+      navigate(AppRoutes.LOGIN);
+    }
   };
 
   return (
@@ -35,6 +47,9 @@ const HomePage = () => {
         <CreateColumnForm onCancel={handleCloseModal} />
       </Dialog>
       <ColumnsList userId={userId} />
+      <Button sx={{ mr: 3 }} onClick={handleLogout}>
+        Выйти
+      </Button>
     </div>
   );
 };
