@@ -10,11 +10,11 @@ import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { loginUser } from "../store/userSlice";
-import AppRoutes from "../enums/routes";
-import loginSchema from "../schemas/LoginSchema";
-import type { LoginFormInputs } from "../schemas/LoginSchema";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { loginUser } from "@store/userSlice";
+import AppRoutes from "@enums/routes";
+import loginSchema from "@schemas/LoginSchema";
+import type { LoginFormInputs } from "@schemas/LoginSchema";
 
 const LoginPage = () => {
   const {

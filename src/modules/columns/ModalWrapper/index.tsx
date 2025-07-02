@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, Button } from "@mui/material";
 
-interface ModalWrapperProps {
+export interface ModalWrapperProps {
   children: (onClose: () => void) => React.ReactNode;
   openButtonText: string;
 }
@@ -11,20 +11,13 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
   openButtonText,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
   return (
     <>
-      <Button sx={{ mr: 3 }} onClick={handleOpen}>
+      <Button sx={{ mr: 3 }} onClick={() => setIsOpen(true)}>
         {openButtonText}
       </Button>
-      <Dialog open={isOpen} onClose={handleClose}>
-        {children(handleClose)}
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+        {children(() => setIsOpen(false))}
       </Dialog>
     </>
   );

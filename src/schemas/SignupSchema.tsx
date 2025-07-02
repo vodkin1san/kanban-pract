@@ -1,6 +1,6 @@
 import z from "zod";
 
-const mySchema = z
+const signupSchema = z
   .object({
     email: z.string().email("Укажите ваш email адрес"),
     password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
@@ -13,5 +13,5 @@ const mySchema = z
     path: ["confirmPassword"],
   });
 
-export type SignupFormInputs = z.infer<typeof mySchema>;
-export default mySchema;
+export type SignupFormInputs = z.infer<typeof signupSchema>;
+export default signupSchema;

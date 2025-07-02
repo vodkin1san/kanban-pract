@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { fetchColumn, selectAllColumns } from "../../../store/columnSlice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { fetchColumn, selectAllColumns } from "@store/columnSlice";
 
 export interface ColumnsListProps {
   userId: string;

@@ -1,7 +1,14 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/config";
-import { getFirebaseErrorMessage } from "../utils/firebaseErrors";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "@myFirebase/config";
+import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
 import { signOut } from "firebase/auth";
 
 interface UserState {
@@ -20,9 +27,16 @@ const initialState: UserState = {
 
 export const loginUser = createAsyncThunk(
   "user/login",
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    { email, password }: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       return {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -31,14 +45,21 @@ export const loginUser = createAsyncThunk(
       const errorMessage = getFirebaseErrorMessage(error);
       return rejectWithValue(errorMessage);
     }
-  }
+  },
 );
 
 export const registerUser = createAsyncThunk(
   "user/register",
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    { email, password }: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       return {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -47,23 +68,29 @@ export const registerUser = createAsyncThunk(
       const errorMessage = getFirebaseErrorMessage(error);
       return rejectWithValue(errorMessage);
     }
-  }
+  },
 );
 
-export const logoutUser = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    const errorMessage = getFirebaseErrorMessage(error);
-    return rejectWithValue(errorMessage);
-  }
-});
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      const errorMessage = getFirebaseErrorMessage(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ uid: string | null; email: string | null }>) => {
+    setUser: (
+      state,
+      action: PayloadAction<{ uid: string | null; email: string | null }>,
+    ) => {
       state.uid = action.payload.uid;
       state.email = action.payload.email;
       state.isLoading = false;

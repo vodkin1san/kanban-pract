@@ -1,10 +1,10 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { createColumn } from "../../store/columnSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import columnFormSchema from "../../schemas/CreateColumnSchema";
-import type { CreateColumnFormInputs } from "../../schemas/CreateColumnSchema";
+import { createColumn } from "@store/columnSlice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import columnFormSchema from "@schemas/CreateColumnSchema";
+import type { CreateColumnFormInputs } from "@schemas/CreateColumnSchema";
 
 export interface CreateColumnFormProps {
   onCancel: () => void;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import AppRoutes from "../enums/routes.tsx";
-import { useAppSelector } from "../store/hooks";
+import AppRoutes from "@enums/routes";
+import { useAppSelector } from "@store/hooks";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();

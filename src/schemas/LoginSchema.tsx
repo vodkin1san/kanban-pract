@@ -1,9 +1,9 @@
 import z from "zod";
 
-const myScheme = z.object({
+const loginScheme = z.object({
   email: z.string().email("Неверный формат email"),
   password: z.string().min(1, "Пожалуйста, введите пароль"),
 });
 
-export type LoginFormInputs = z.infer<typeof myScheme>;
-export default myScheme;
+export type LoginFormInputs = z.infer<typeof loginScheme>;
+export default loginScheme;

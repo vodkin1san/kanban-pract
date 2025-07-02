@@ -4,10 +4,10 @@ import {
   createAsyncThunk,
 } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { db } from "../firebase/config";
+import { db } from "@myFirebase/config";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { getFirebaseErrorMessage } from "../utils/firebaseErrors";
-import type { RootState } from "../store";
+import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
+import type { RootState } from "@store/index";
 
 interface Column {
   id: string;
