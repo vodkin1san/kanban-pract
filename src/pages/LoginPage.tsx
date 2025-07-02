@@ -15,6 +15,7 @@ import { loginUser } from "@store/userSlice";
 import AppRoutes from "@enums/routes";
 import loginSchema from "@schemas/LoginSchema";
 import type { LoginFormInputs } from "@schemas/LoginSchema";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const {
@@ -32,6 +33,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.user);
+  const { t } = useTranslation("common");
 
   const onSubmit = async (data: LoginFormInputs) => {
     const resultAction = await dispatch(
@@ -57,7 +59,7 @@ const LoginPage = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Авторизация
+            {t("login")}
           </Typography>
           <Controller
             name="email"
@@ -69,7 +71,7 @@ const LoginPage = () => {
                 fullWidth
                 id="email"
                 type="email"
-                label="Email адрес"
+                label={t("emailLabel")}
                 margin="normal"
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -86,7 +88,7 @@ const LoginPage = () => {
                 fullWidth
                 id="password"
                 type="password"
-                label="Пароль"
+                label={t("passwordLabel")}
                 margin="normal"
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -100,15 +102,15 @@ const LoginPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? "Вход..." : "Войти"}
+            {isLoading ? t("loggingIn") : t("loginButton")}
           </Button>
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              Ошибка: {error}
+              {t("error")}: {error}
             </Typography>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.SIGNUP}>
-            {"Еще нет аккаунта? Зарегистрироваться"}
+            {t("noAccountYetSignup")}
           </MuiLink>
         </Box>
       </Container>

@@ -6,6 +6,7 @@ import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "@modules/columns/ColumnsList/index";
 import { logoutUser } from "@store/userSlice";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const HomePage = () => {
   const { uid: userId, error: userError } = useAppSelector(
     (state) => state.user,
   );
+  const { t } = useTranslation("common");
 
   const handleLogout = async () => {
     const resultAction = await dispatch(logoutUser());
@@ -24,14 +26,15 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Главная страница</h1>
-      <p>This is the HomePage form. (To be implemented)</p>
+      <h1>{t(`mainPageTitle`)}</h1>
+      <p>{t(`mainPageDescription`)}</p>
       <p>
-        Перейти на страницу входа: <Link to={AppRoutes.LOGIN}>Login</Link>
+        {t(`navToLogin`)}
+        <Link to={AppRoutes.LOGIN}>{t(`login`)}</Link>
       </p>
       <p>
-        Перейти на страницу регистрации:{" "}
-        <Link to={AppRoutes.SIGNUP}>SignUp</Link>
+        {t(`navToSignUp`)}
+        <Link to={AppRoutes.SIGNUP}>{t(`signup`)}</Link>
       </p>
       {userError && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -41,7 +44,7 @@ const HomePage = () => {
 
       {userId ? (
         <>
-          <ModalWrapper openButtonText="Создать колонку">
+          <ModalWrapper openButtonText={t("createColumnButton")}>
             {(onClose) => (
               <CreateColumnForm
                 onCancel={onClose}
@@ -52,12 +55,12 @@ const HomePage = () => {
           </ModalWrapper>
           <ColumnsList userId={userId} />
           <Button sx={{ mr: 3 }} onClick={handleLogout}>
-            Выйти
+            {t("logout")}
           </Button>
         </>
       ) : (
         <Alert severity="warning" sx={{ mt: 2 }}>
-          Пожалуйста, авторизуйтесь, чтобы управлять колонками.
+          {t("notAuthorized")}
         </Alert>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { Box, Button, AppBar, Toolbar, Typography } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
@@ -11,9 +12,11 @@ import { SignupPage } from "@pages/SignupPage";
 import { LoginPage } from "@pages/LoginPage";
 import { PrivateRoute } from "@components/PrivateRoute";
 import AppRoutes from "@enums/routes";
+import { useTranslation } from "react-i18next";
 
 function App() {
   const dispatch = useAppDispatch();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const unsubscribe = firebaseAuthListener(auth, (user) => {
@@ -25,16 +28,35 @@ function App() {
     });
     return () => unsubscribe();
   }, [dispatch]);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
   return (
-    <Routes>
-      <Route path={AppRoutes.LOGIN} element={<LoginPage />} />
-      <Route path={AppRoutes.SIGNUP} element={<SignupPage />} />
-      <Route element={<PrivateRoute />}>
-        <Route path={AppRoutes.HOME} element={<HomePage />} />
-        <Route path={AppRoutes.TASKS} element={<TasksPage />} />
-        <Route path={AppRoutes.COLUMNS} element={<ColumnsPage />} />
-      </Route>
-    </Routes>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            My App
+          </Typography>
+          <Button color="inherit" onClick={() => changeLanguage("en")}>
+            EN
+          </Button>
+          <Button color="inherit" onClick={() => changeLanguage("ru")}>
+            RU
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Routes>
+        <Route path={AppRoutes.LOGIN} element={<LoginPage />} />
+        <Route path={AppRoutes.SIGNUP} element={<SignupPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path={AppRoutes.HOME} element={<HomePage />} />
+          <Route path={AppRoutes.TASKS} element={<TasksPage />} />
+          <Route path={AppRoutes.COLUMNS} element={<ColumnsPage />} />
+        </Route>
+      </Routes>
+    </Box>
   );
 }
 

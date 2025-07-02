@@ -1,0 +1,34 @@
+{
+  "welcome": "Welcome!",
+  "login": "Login",
+  "signup": "Sign Up",
+  "logout": "Logout",
+  "cancel": "Cancel",
+  "create": "Create",
+  "creating": "Creating...",
+  "loading": "Loading...",
+  "error": "Error:",
+  "notAuthorized": "Please authorize to manage columns.",
+  "mainPageTitle": "Main Page",
+  "mainPageDescription": "This is the HomePage form. (To be implemented)",
+  "navToLogin": "Go to login page:",
+  "navToSignUp": "Go to sign up page:",
+  "columnFormTitle": "Create New Column",
+  "columnNameLabel": "Column Name",
+  "createColumnButton": "Create Column",
+
+  "emailLabel": "Email address",
+  "passwordLabel": "Password",
+  "loggingIn": "Logging in...",
+  "loginButton": "Login",
+  "noAccountYetSignup": "Don't have an account yet? Sign Up",
+
+  "confirmPasswordLabel": "Confirm password",
+  "registering": "Registering...",
+  "signupButton": "Sign Up",
+  "alreadyHaveAccountLogin": "Already have an account? Login",
+
+  "loadingColumns": "Loading columns...",
+  "myColumnsTitle": "My Columns:",
+  "noColumnsYet": "You don't have any columns yet. Create a new one!"
+}
