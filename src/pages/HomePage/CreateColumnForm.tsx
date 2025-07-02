@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import { TextField, Button, Box, Typography, Alert } from "@mui/material";
 import { createColumn } from "@store/columnSlice";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import columnFormSchema from "@schemas/CreateColumnSchema";
@@ -17,7 +17,7 @@ const CreateColumnForm = ({
   onSuccess,
   userId,
 }: CreateColumnFormProps) => {
-  const { isLoading } = useAppSelector((state) => state.column);
+  const { isLoading, error } = useAppSelector((state) => state.column);
   const dispatch = useAppDispatch();
 
   const {
@@ -52,6 +52,11 @@ const CreateColumnForm = ({
           onSubmit={handleSubmit(onSubmit)}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Controller
             name="name"
             control={control}
