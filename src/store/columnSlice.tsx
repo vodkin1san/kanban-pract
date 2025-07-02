@@ -2,8 +2,8 @@ import {
   createSlice,
   createEntityAdapter,
   createAsyncThunk,
+  type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import { db } from "@myFirebase/config";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
@@ -16,10 +16,7 @@ interface Column {
   createAt: string;
 }
 
-const columnsAdapter = createEntityAdapter<Column>({
-  selectId: (column: Column) => column.id,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any);
+const columnsAdapter = createEntityAdapter<Column>();
 
 interface ColumnState
   extends ReturnType<typeof columnsAdapter.getInitialState> {
