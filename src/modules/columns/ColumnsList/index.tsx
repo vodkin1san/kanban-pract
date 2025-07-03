@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
@@ -13,7 +13,7 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
   const columns = useAppSelector(selectAllColumns);
   const isLoading = useAppSelector((state) => state.column.isLoading);
   const error = useAppSelector((state) => state.column.error);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["columns", "common"]);
 
   useEffect(() => {
     dispatch(fetchColumn(userId));

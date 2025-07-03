@@ -17,23 +17,23 @@ import type { SignupFormInputs } from "../schemas/SignupSchema";
 import { useTranslation } from "react-i18next";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+  const { t } = useTranslation(["auth", "common"]);
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<SignupFormInputs>({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(signupSchema(t)),
     defaultValues: {
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
-
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.user);
-  const { t } = useTranslation("common");
 
   const onSubmit = async (data: SignupFormInputs) => {
     const resultAction = await dispatch(
@@ -122,7 +122,7 @@ const SignupPage = () => {
           </Button>
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {t("error")}: {error}
+              {t("common:error")}: {error}
             </Typography>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.LOGIN} variant="body2">

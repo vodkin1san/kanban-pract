@@ -20,14 +20,14 @@ const CreateColumnForm = ({
 }: CreateColumnFormProps) => {
   const { isLoading, error } = useAppSelector((state) => state.column);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "columns"]);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<CreateColumnFormInputs>({
-    resolver: zodResolver(columnFormSchema),
+    resolver: zodResolver(columnFormSchema(t)),
     defaultValues: {
       name: "",
     },
@@ -46,7 +46,7 @@ const CreateColumnForm = ({
     <>
       <Box sx={{ p: 3 }}>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-          {t("columnFormTitle")}
+          {t("columns:columnFormTitle")}
         </Typography>
         <Box
           noValidate
@@ -66,7 +66,7 @@ const CreateColumnForm = ({
               <TextField
                 {...field}
                 fullWidth
-                label={t("columnNameLabel")}
+                label={t("columns:columnNameLabel")}
                 id="name"
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -75,7 +75,7 @@ const CreateColumnForm = ({
             )}
           />
           <Button type="submit" variant="contained" disabled={isLoading}>
-            {isLoading ? t("creating") : t("createColumnButton")}
+            {isLoading ? t("creating") : t("columns:createColumnButton")}
           </Button>
           <Button onClick={onCancel} variant="outlined" disabled={isLoading}>
             {t("cancel")}

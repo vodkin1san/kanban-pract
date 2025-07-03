@@ -1,4 +1,14 @@
-import { Box, Button, AppBar, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  AppBar,
+  Toolbar,
+  Typography,
+  MenuItem,
+  type SelectChangeEvent,
+} from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
@@ -13,10 +23,11 @@ import { LoginPage } from "@pages/LoginPage";
 import { PrivateRoute } from "@components/PrivateRoute";
 import AppRoutes from "@enums/routes";
 import { useTranslation } from "react-i18next";
+import { supportedLanguages } from "./localization/config";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     const unsubscribe = firebaseAuthListener(auth, (user) => {
@@ -29,22 +40,37 @@ function App() {
     return () => unsubscribe();
   }, [dispatch]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
+    i18n.changeLanguage(event.target.value);
   };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            My App
+            {t("appName")}
           </Typography>
-          <Button color="inherit" onClick={() => changeLanguage("en")}>
-            EN
-          </Button>
-          <Button color="inherit" onClick={() => changeLanguage("ru")}>
-            RU
-          </Button>
+
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="language-select-label" sx={{ color: "white" }}>
+              {t("language")}
+            </InputLabel>{" "}
+            <Select
+              labelId="language-select-label"
+              id="language-select"
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              label={t("language")}
+              sx={{ color: "white", "& .MuiSelect-icon": { color: "white" } }}
+            >
+              {supportedLanguages.map((lang) => (
+                <MenuItem key={lang.code} value={lang.code}>
+                  {t(lang.labelKey)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Toolbar>
       </AppBar>
       <Routes>

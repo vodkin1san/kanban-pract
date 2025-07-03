@@ -14,7 +14,7 @@ const HomePage = () => {
   const { uid: userId, error: userError } = useAppSelector(
     (state) => state.user,
   );
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "auth", "columns"]);
 
   const handleLogout = async () => {
     const resultAction = await dispatch(logoutUser());
@@ -29,12 +29,12 @@ const HomePage = () => {
       <h1>{t(`mainPageTitle`)}</h1>
       <p>{t(`mainPageDescription`)}</p>
       <p>
-        {t(`navToLogin`)}
-        <Link to={AppRoutes.LOGIN}>{t(`login`)}</Link>
+        {t(`auth:navToLogin`)}
+        <Link to={AppRoutes.LOGIN}>{t(`auth:login`)}</Link>
       </p>
       <p>
-        {t(`navToSignUp`)}
-        <Link to={AppRoutes.SIGNUP}>{t(`signup`)}</Link>
+        {t(`auth:navToSignUp`)}
+        <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
       </p>
       {userError && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -44,7 +44,7 @@ const HomePage = () => {
 
       {userId ? (
         <>
-          <ModalWrapper openButtonText={t("createColumnButton")}>
+          <ModalWrapper openButtonText={t("columns:createColumnButton")}>
             {(onClose) => (
               <CreateColumnForm
                 onCancel={onClose}
@@ -55,12 +55,12 @@ const HomePage = () => {
           </ModalWrapper>
           <ColumnsList userId={userId} />
           <Button sx={{ mr: 3 }} onClick={handleLogout}>
-            {t("logout")}
+            {t("auth:logout")}
           </Button>
         </>
       ) : (
         <Alert severity="warning" sx={{ mt: 2 }}>
-          {t("notAuthorized")}
+          {t("auth:notAuthorized")}
         </Alert>
       )}
     </div>

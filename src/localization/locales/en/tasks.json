@@ -1,0 +1,9 @@
+{
+  "taskTitleLabel": "Task Title",
+  "taskDescriptionLabel": "Description",
+  "taskDueDateLabel": "Due Date",
+  "taskColumnLabel": "Attach to Column",
+  "createTaskButton": "Create Task",
+  "loadingTasks": "Loading tasks...",
+  "noTasksYet": "No tasks created yet."
+}

@@ -1,34 +1,14 @@
 {
   "welcome": "Добро пожаловать!",
-  "login": "Вход",
-  "signup": "Регистрация",
-  "logout": "Выйти",
   "cancel": "Отмена",
   "create": "Создать",
   "creating": "Создание...",
   "loading": "Загрузка...",
   "error": "Ошибка:",
-  "notAuthorized": "Пожалуйста, авторизуйтесь, чтобы управлять колонками.",
   "mainPageTitle": "Главная страница",
   "mainPageDescription": "Это форма главной страницы. (Будет реализовано)",
-  "navToLogin": "Перейти на страницу входа:",
-  "navToSignUp": "Перейти на страницу регистрации:",
-  "columnFormTitle": "Создать новую колонку",
-  "columnNameLabel": "Название колонки",
-  "createColumnButton": "Создать колонку",
-
-  "emailLabel": "Email адрес",
-  "passwordLabel": "Пароль",
-  "loggingIn": "Вход...",
-  "loginButton": "Войти",
-  "noAccountYetSignup": "Ещё нет аккаунта? Зарегистрироваться",
-
-  "confirmPasswordLabel": "Повторите пароль",
-  "registering": "Регистрация...",
-  "signupButton": "Зарегистрироваться",
-  "alreadyHaveAccountLogin": "Уже есть аккаунт? Войти",
-
-  "loadingColumns": "Загрузка колонок...",
-  "myColumnsTitle": "Мои Колонки:",
-  "noColumnsYet": "У вас пока нет колонок. Создайте новую!"
+  "appName": "Моя Канбан Доска",
+  "language": "Язык",
+  "language.english": "Английский",
+  "language.russian": "Русский"
 }

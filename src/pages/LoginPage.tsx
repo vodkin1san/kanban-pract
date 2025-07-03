@@ -18,22 +18,22 @@ import type { LoginFormInputs } from "@schemas/LoginSchema";
 import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+  const { t } = useTranslation(["auth", "common"]);
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<LoginFormInputs>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema(t)),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.user);
-  const { t } = useTranslation("common");
 
   const onSubmit = async (data: LoginFormInputs) => {
     const resultAction = await dispatch(
@@ -106,7 +106,7 @@ const LoginPage = () => {
           </Button>
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {t("error")}: {error}
+              {t("common:error")}: {error}
             </Typography>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.SIGNUP}>

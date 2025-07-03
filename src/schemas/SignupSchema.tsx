@@ -1,17 +1,20 @@
 import z from "zod";
+import type { TFunction } from "i18next";
 
-const signupSchema = z
-  .object({
-    email: z.string().email("Укажите ваш email адрес"),
-    password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
-    confirmPassword: z
-      .string()
-      .min(6, "Пароль должен быть не менее 6 символов"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Пароли не совподают",
-    path: ["confirmPassword"],
-  });
+const signupSchema = (t: TFunction) => {
+  return z
+    .object({
+      email: z.string().email(t("auth:validation.emailInvalid")),
+      password: z.string().min(6, t("auth:validation.passwordMinLength")),
+      confirmPassword: z
+        .string()
+        .min(6, t("auth:validation.passwordMinLength")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("auth:validation.passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
+};
 
-export type SignupFormInputs = z.infer<typeof signupSchema>;
+export type SignupFormInputs = z.infer<ReturnType<typeof signupSchema>>;
 export default signupSchema;
