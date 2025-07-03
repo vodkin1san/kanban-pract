@@ -21,6 +21,11 @@ const HomePage = () => {
 
     if (logoutUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.LOGIN);
+    } else if (logoutUser.rejected.match(resultAction)) {
+      console.error(
+        "auth:logoutFailed",
+        resultAction.payload || resultAction.error.message,
+      );
     }
   };
 

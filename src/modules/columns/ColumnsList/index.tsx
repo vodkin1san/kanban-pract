@@ -11,7 +11,9 @@ export interface ColumnsListProps {
 const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
   const dispatch = useAppDispatch();
   const columns = useAppSelector(selectAllColumns);
-  const isLoading = useAppSelector((state) => state.column.isLoading);
+  const isFetchingColumns = useAppSelector(
+    (state) => state.column.isFetchingColumns,
+  );
   const error = useAppSelector((state) => state.column.error);
   const { t } = useTranslation(["columns", "common"]);
 
@@ -19,7 +21,7 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
     dispatch(fetchColumn(userId));
   }, [dispatch, userId]);
 
-  if (isLoading) {
+  if (isFetchingColumns) {
     return <p>{t("loadingColumns")}</p>;
   }
 

@@ -20,12 +20,14 @@ const columnsAdapter = createEntityAdapter<Column>();
 
 interface ColumnState
   extends ReturnType<typeof columnsAdapter.getInitialState> {
-  isLoading: boolean;
+  isCreatingColumn: boolean;
+  isFetchingColumns: boolean;
   error: string | null;
 }
 
 const initialState: ColumnState = columnsAdapter.getInitialState({
-  isLoading: false,
+  isCreatingColumn: false,
+  isFetchingColumns: false,
   error: null,
 });
 
@@ -85,40 +87,36 @@ const columnSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createColumn.pending, (state) => {
-        state.isLoading = true;
+        state.isCreatingColumn = true;
         state.error = null;
       })
       .addCase(
         createColumn.fulfilled,
         (state, action: PayloadAction<Column>) => {
-          state.isLoading = false;
+          state.isCreatingColumn = false;
           state.error = null;
           columnsAdapter.addOne(state, action.payload);
         },
       )
       .addCase(createColumn.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          (action.payload as string) ||
-          "Неизвестная ошибка при создании колонки";
+        state.isCreatingColumn = false;
+        state.error = action.payload as string;
       })
       .addCase(fetchColumn.pending, (state) => {
-        state.isLoading = true;
+        state.isFetchingColumns = true;
         state.error = null;
       })
       .addCase(
         fetchColumn.fulfilled,
         (state, action: PayloadAction<Column[]>) => {
-          state.isLoading = false;
+          state.isFetchingColumns = false;
           state.error = null;
           columnsAdapter.setAll(state, action.payload);
         },
       )
       .addCase(fetchColumn.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          (action.payload as string) ||
-          "Неизвестная ошибка при создании колонки";
+        state.isFetchingColumns = false;
+        state.error = action.payload as string;
         columnsAdapter.removeAll(state);
       });
   },
