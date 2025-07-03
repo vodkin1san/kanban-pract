@@ -5,6 +5,7 @@ import { createColumn } from "@store/columnSlice";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import columnFormSchema from "@schemas/CreateColumnSchema";
 import type { CreateColumnFormInputs } from "@schemas/CreateColumnSchema";
+import { useTranslation } from "react-i18next";
 
 export interface CreateColumnFormProps {
   onCancel: () => void;
@@ -17,15 +18,16 @@ const CreateColumnForm = ({
   onSuccess,
   userId,
 }: CreateColumnFormProps) => {
-  const { isLoading, error } = useAppSelector((state) => state.column);
+  const { isCreatingColumn, error } = useAppSelector((state) => state.column);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation(["common", "columns"]);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<CreateColumnFormInputs>({
-    resolver: zodResolver(columnFormSchema),
+    resolver: zodResolver(columnFormSchema(t)),
     defaultValues: {
       name: "",
     },
@@ -37,6 +39,11 @@ const CreateColumnForm = ({
     );
     if (createColumn.fulfilled.match(resultAction)) {
       onSuccess();
+    } else if (createColumn.rejected.match(resultAction)) {
+      console.error(
+        "colums:createColumnFailed",
+        resultAction.payload || resultAction.error.message,
+      );
     }
   };
 
@@ -44,7 +51,7 @@ const CreateColumnForm = ({
     <>
       <Box sx={{ p: 3 }}>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-          Создать новую колонку
+          {t("columns:columnFormTitle")}
         </Typography>
         <Box
           noValidate
@@ -64,19 +71,23 @@ const CreateColumnForm = ({
               <TextField
                 {...field}
                 fullWidth
-                label="Название колонки"
+                label={t("columns:columnNameLabel")}
                 id="name"
                 error={!!errors.name}
                 helperText={errors.name?.message}
-                disabled={isLoading}
+                disabled={isCreatingColumn}
               />
             )}
           />
-          <Button type="submit" variant="contained" disabled={isLoading}>
-            {isLoading ? "Создание..." : "Создать"}
+          <Button type="submit" variant="contained" disabled={isCreatingColumn}>
+            {isCreatingColumn ? t("creating") : t("columns:createColumnButton")}
           </Button>
-          <Button onClick={onCancel} variant="outlined" disabled={isLoading}>
-            Отмена
+          <Button
+            onClick={onCancel}
+            variant="outlined"
+            disabled={isCreatingColumn}
+          >
+            {t("cancel")}
           </Button>
         </Box>
       </Box>

@@ -1,8 +1,13 @@
 import z from "zod";
+import type { TFunction } from "i18next";
 
-const сreateColumnSchema = z.object({
-  name: z.string().min(1, "Название колонки не может быть пустым"),
-});
+const сreateColumnSchema = (t: TFunction) => {
+  return z.object({
+    name: z.string().min(1, t("columns:validation.columnNameRequired")),
+  });
+};
 
-export type CreateColumnFormInputs = z.infer<typeof сreateColumnSchema>;
+export type CreateColumnFormInputs = z.infer<
+  ReturnType<typeof сreateColumnSchema>
+>;
 export default сreateColumnSchema;

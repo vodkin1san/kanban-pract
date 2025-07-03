@@ -1,0 +1,13 @@
+{
+  "columnFormTitle": "Create New Column",
+  "columnNameLabel": "Column Name",
+  "createColumnButton": "Create Column",
+  "loadingColumns": "Loading columns...",
+  "myColumnsTitle": "My Columns:",
+  "noColumnsYet": "You don't have any columns yet. Create a new one!",
+  "createColumnFailed": "Failed to create column:",
+
+  "validation": {
+    "columnNameRequired": "Column name cannot be empty"
+  }
+}

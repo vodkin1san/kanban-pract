@@ -1,0 +1,9 @@
+{
+  "taskTitleLabel": "Название задачи",
+  "taskDescriptionLabel": "Описание",
+  "taskDueDateLabel": "Дата выполнения",
+  "taskColumnLabel": "Прикрепить к колонке",
+  "createTaskButton": "Создать задачу",
+  "loadingTasks": "Загрузка задач...",
+  "noTasksYet": "Задачи пока не созданы."
+}
