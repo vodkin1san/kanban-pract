@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
+import { useTranslation } from "react-i18next";
 
 export interface ColumnsListProps {
   userId: string;
@@ -12,22 +13,29 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
   const columns = useAppSelector(selectAllColumns);
   const isLoading = useAppSelector((state) => state.column.isLoading);
   const error = useAppSelector((state) => state.column.error);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     dispatch(fetchColumn(userId));
   }, [dispatch, userId]);
 
   if (isLoading) {
-    return <p>Загрузка колонок...</p>;
+    return <p>{t("loadingColumns")}</p>;
   }
 
   if (error) {
-    return <p style={{ color: "red" }}>Ошибка: {error}</p>;
+    return (
+      <p style={{ color: "red" }}>
+        {t("error")}: {error}
+      </p>
+    );
   }
 
   return (
     <Box>
-      <h2>Мои Колонки:</h2>
+      <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+        {t("myColumnsTitle")}
+      </Typography>
       {columns.length > 0 ? (
         <ul>
           {columns.map((column) => (
@@ -37,7 +45,7 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
           ))}
         </ul>
       ) : (
-        <p>У вас пока нет колонок. Создайте новую!</p>
+        <Typography>{t("noColumnsYet")}</Typography>
       )}
     </Box>
   );

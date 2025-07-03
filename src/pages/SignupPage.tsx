@@ -14,6 +14,7 @@ import { registerUser } from "../store/userSlice";
 import AppRoutes from "../enums/routes";
 import signupSchema from "../schemas/SignupSchema";
 import type { SignupFormInputs } from "../schemas/SignupSchema";
+import { useTranslation } from "react-i18next";
 
 const SignupPage = () => {
   const {
@@ -32,6 +33,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.user);
+  const { t } = useTranslation("common");
 
   const onSubmit = async (data: SignupFormInputs) => {
     const resultAction = await dispatch(
@@ -56,7 +58,7 @@ const SignupPage = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Регистрация
+            {t("signup")}
           </Typography>
           <Controller
             name="email"
@@ -67,7 +69,7 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email адрес"
+                label={t("emailLabel")}
                 type="email"
                 margin="normal"
                 error={!!errors.email}
@@ -84,7 +86,7 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="password"
-                label="Пароль"
+                label={t("passwordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.password}
@@ -101,7 +103,7 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="confirmPassword"
-                label="Повторите пароль"
+                label={t("confirmPasswordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.confirmPassword}
@@ -116,15 +118,15 @@ const SignupPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? "Регистрация..." : "Зарегистрироваться"}
+            {isLoading ? t("registering") : t("signupButton")}
           </Button>
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              Ошибка: {error}
+              {t("error")}: {error}
             </Typography>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.LOGIN} variant="body2">
-            {"Уже есть аккаунт? Войти"}
+            {t("alreadyHaveAccountLogin")}
           </MuiLink>
         </Box>
       </Container>

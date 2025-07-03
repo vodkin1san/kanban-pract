@@ -5,6 +5,7 @@ import { createColumn } from "@store/columnSlice";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import columnFormSchema from "@schemas/CreateColumnSchema";
 import type { CreateColumnFormInputs } from "@schemas/CreateColumnSchema";
+import { useTranslation } from "react-i18next";
 
 export interface CreateColumnFormProps {
   onCancel: () => void;
@@ -19,6 +20,7 @@ const CreateColumnForm = ({
 }: CreateColumnFormProps) => {
   const { isLoading, error } = useAppSelector((state) => state.column);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation("common");
 
   const {
     handleSubmit,
@@ -44,7 +46,7 @@ const CreateColumnForm = ({
     <>
       <Box sx={{ p: 3 }}>
         <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-          Создать новую колонку
+          {t("columnFormTitle")}
         </Typography>
         <Box
           noValidate
@@ -64,7 +66,7 @@ const CreateColumnForm = ({
               <TextField
                 {...field}
                 fullWidth
-                label="Название колонки"
+                label={t("columnNameLabel")}
                 id="name"
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -73,10 +75,10 @@ const CreateColumnForm = ({
             )}
           />
           <Button type="submit" variant="contained" disabled={isLoading}>
-            {isLoading ? "Создание..." : "Создать"}
+            {isLoading ? t("creating") : t("createColumnButton")}
           </Button>
           <Button onClick={onCancel} variant="outlined" disabled={isLoading}>
-            Отмена
+            {t("cancel")}
           </Button>
         </Box>
       </Box>
