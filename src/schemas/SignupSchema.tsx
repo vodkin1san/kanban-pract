@@ -2,12 +2,12 @@ import z from "zod";
 
 const signupSchema = z
   .object({
-    email: z.string().email("auth:validation.emailInvalid"),
-    password: z.string().min(6, "auth:validation.passwordMinLength"),
-    confirmPassword: z.string().min(6, "auth:validation.passwordMinLength"),
+    email: z.string().email("emailInvalid"),
+    password: z.string().min(6, "passwordMinLength"),
+    confirmPassword: z.string().min(6, "passwordMinLength"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "auth:validation.passwordsMismatch",
+    message: "passwordsMismatch",
     path: ["confirmPassword"],
   });
 

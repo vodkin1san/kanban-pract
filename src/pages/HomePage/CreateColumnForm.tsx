@@ -48,54 +48,54 @@ const CreateColumnForm = ({
   };
 
   return (
-    <>
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-          {t("columns:columnFormTitle")}
-        </Typography>
-        <Box
-          noValidate
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {t("common:error")}: {error}
-            </Alert>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+        {t("columns:columnFormTitle")}
+      </Typography>
+      <Box
+        noValidate
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {t("common:error")}: {error}
+          </Alert>
+        )}
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              fullWidth
+              label={t("columns:columnNameLabel")}
+              id="name"
+              error={!!errors.name}
+              helperText={
+                errors.name?.message
+                  ? t(`columns:validation.${errors.name.message}`)
+                  : undefined
+              }
+              disabled={isCreatingColumn}
+            />
           )}
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label={t("columns:columnNameLabel")}
-                id="name"
-                error={!!errors.name}
-                helperText={
-                  errors.name?.message ? t(errors.name.message) : undefined
-                }
-                disabled={isCreatingColumn}
-              />
-            )}
-          />
-          <Button type="submit" variant="contained" disabled={isCreatingColumn}>
-            {isCreatingColumn
-              ? t("common:creating")
-              : t("columns:createColumnButton")}
-          </Button>
-          <Button
-            onClick={onCancel}
-            variant="outlined"
-            disabled={isCreatingColumn}
-          >
-            {t("common:cancel")}
-          </Button>
-        </Box>
+        />
+        <Button type="submit" variant="contained" disabled={isCreatingColumn}>
+          {isCreatingColumn
+            ? t("common:creating")
+            : t("columns:createColumnButton")}
+        </Button>
+        <Button
+          onClick={onCancel}
+          variant="outlined"
+          disabled={isCreatingColumn}
+        >
+          {t("common:cancel")}
+        </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 

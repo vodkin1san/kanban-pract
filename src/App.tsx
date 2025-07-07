@@ -38,7 +38,7 @@ function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {t("appName")}
           </Typography>
-          <LanguageSwitcher />
+          <LanguageSwitcher sx={{ ml: 1 }} />
         </Toolbar>
       </AppBar>
       <Routes>

@@ -4,11 +4,26 @@ import {
   Select,
   MenuItem,
   type SelectChangeEvent,
+  type SxProps,
+  type Theme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { supportedLanguages } from "@localization/config";
 
-const LanguageSwitcher = () => {
+const inputLabelStyles: SxProps<Theme> = {
+  color: "#FFFFFF",
+};
+
+const selectStyles: SxProps<Theme> = {
+  color: "#FFFFFF",
+  "& .MuiSelect-icon": { color: "#FFFFFF" },
+};
+
+export interface LanguageSwitcherProps {
+  sx?: SxProps<Theme>;
+}
+
+const LanguageSwitcher = ({ sx }: LanguageSwitcherProps) => {
   const { i18n, t } = useTranslation();
 
   const handleLanguageChange = (event: SelectChangeEvent<string>) => {
@@ -16,8 +31,8 @@ const LanguageSwitcher = () => {
   };
 
   return (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="language-select-label" sx={{ color: "#FFFFFF" }}>
+    <FormControl variant="standard" sx={{ minWidth: 120, ...sx }}>
+      <InputLabel id="language-select-label" sx={inputLabelStyles}>
         {t("language")}
       </InputLabel>{" "}
       <Select
@@ -26,7 +41,7 @@ const LanguageSwitcher = () => {
         value={i18n.language}
         onChange={handleLanguageChange}
         label={t("language")}
-        sx={{ color: "#FFFFFF", "& .MuiSelect-icon": { color: "#FFFFFF" } }}
+        sx={selectStyles}
       >
         {supportedLanguages.map((lang) => (
           <MenuItem key={lang.code} value={lang.code}>

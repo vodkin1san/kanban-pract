@@ -6,6 +6,8 @@ import {
   Box,
   Link as MuiLink,
   Alert,
+  type SxProps,
+  type Theme,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
@@ -17,6 +19,13 @@ import AppRoutes from "@enums/routes";
 import loginSchema from "@schemas/LoginSchema";
 import type { LoginFormInputs } from "@schemas/LoginSchema";
 import { useTranslation } from "react-i18next";
+
+const formContainerStyles: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: 8,
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -57,12 +66,7 @@ const LoginPage = () => {
           noValidate
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: 8,
-          }}
+          sx={formContainerStyles}
         >
           <Typography component="h1" variant="h5">
             {t("auth:login")}
@@ -81,7 +85,9 @@ const LoginPage = () => {
                 margin="normal"
                 error={!!errors.email}
                 helperText={
-                  errors.email?.message ? t(errors.email.message) : undefined
+                  errors.email?.message
+                    ? t(`auth:validation.${errors.email.message}`)
+                    : undefined
                 }
                 disabled={isLoading}
               />
@@ -102,7 +108,7 @@ const LoginPage = () => {
                 error={!!errors.password}
                 helperText={
                   errors.password?.message
-                    ? t(errors.password.message)
+                    ? t(`auth:validation.${errors.password.message}`)
                     : undefined
                 }
                 disabled={isLoading}
