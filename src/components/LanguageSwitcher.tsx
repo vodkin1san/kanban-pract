@@ -1,0 +1,41 @@
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  type SelectChangeEvent,
+} from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { supportedLanguages } from "@localization/config";
+
+const LanguageSwitcher = () => {
+  const { i18n, t } = useTranslation();
+
+  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
+  return (
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+      <InputLabel id="language-select-label" sx={{ color: "#FFFFFF" }}>
+        {t("language")}
+      </InputLabel>{" "}
+      <Select
+        labelId="language-select-label"
+        id="language-select"
+        value={i18n.language}
+        onChange={handleLanguageChange}
+        label={t("language")}
+        sx={{ color: "#FFFFFF", "& .MuiSelect-icon": { color: "#FFFFFF" } }}
+      >
+        {supportedLanguages.map((lang) => (
+          <MenuItem key={lang.code} value={lang.code}>
+            {t(lang.labelKey)}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
+export { LanguageSwitcher };

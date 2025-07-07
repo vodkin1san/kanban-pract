@@ -5,6 +5,7 @@ import {
   Container,
   Box,
   Link as MuiLink,
+  Alert,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
@@ -28,7 +29,7 @@ const LoginPage = () => {
     control,
     formState: { errors },
   } = useForm<LoginFormInputs>({
-    resolver: zodResolver(loginSchema(t)),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -41,6 +42,11 @@ const LoginPage = () => {
     );
     if (loginUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
+    } else if (loginUser.rejected.match(resultAction)) {
+      console.error(
+        "auth:loginFailed",
+        resultAction.payload || resultAction.error.message,
+      );
     }
   };
 
@@ -59,7 +65,7 @@ const LoginPage = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            {t("login")}
+            {t("auth:login")}
           </Typography>
           <Controller
             name="email"
@@ -71,10 +77,13 @@ const LoginPage = () => {
                 fullWidth
                 id="email"
                 type="email"
-                label={t("emailLabel")}
+                label={t("auth:emailLabel")}
                 margin="normal"
                 error={!!errors.email}
-                helperText={errors.email?.message}
+                helperText={
+                  errors.email?.message ? t(errors.email.message) : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -88,10 +97,15 @@ const LoginPage = () => {
                 fullWidth
                 id="password"
                 type="password"
-                label={t("passwordLabel")}
+                label={t("auth:passwordLabel")}
                 margin="normal"
                 error={!!errors.password}
-                helperText={errors.password?.message}
+                helperText={
+                  errors.password?.message
+                    ? t(errors.password.message)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -102,15 +116,15 @@ const LoginPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? t("loggingIn") : t("loginButton")}
+            {isLoading ? t("auth:loggingIn") : t("auth:loginButton")}
           </Button>
           {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+            <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
               {t("common:error")}: {error}
-            </Typography>
+            </Alert>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.SIGNUP}>
-            {t("noAccountYetSignup")}
+            {t("auth:noAccountYetSignup")}
           </MuiLink>
         </Box>
       </Container>

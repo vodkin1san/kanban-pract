@@ -9,6 +9,6 @@
   "mainPageDescription": "Это форма главной страницы. (Будет реализовано)",
   "appName": "Моя Канбан Доска",
   "language": "Язык",
-  "language.english": "Английский",
-  "language.russian": "Русский"
+  "languageEnglish": "Английский",
+  "languageRussian": "Русский"
 }

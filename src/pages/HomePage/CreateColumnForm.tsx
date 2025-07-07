@@ -27,7 +27,7 @@ const CreateColumnForm = ({
     control,
     formState: { errors },
   } = useForm<CreateColumnFormInputs>({
-    resolver: zodResolver(columnFormSchema(t)),
+    resolver: zodResolver(columnFormSchema),
     defaultValues: {
       name: "",
     },
@@ -61,7 +61,7 @@ const CreateColumnForm = ({
         >
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
+              {t("common:error")}: {error}
             </Alert>
           )}
           <Controller
@@ -74,20 +74,24 @@ const CreateColumnForm = ({
                 label={t("columns:columnNameLabel")}
                 id="name"
                 error={!!errors.name}
-                helperText={errors.name?.message}
+                helperText={
+                  errors.name?.message ? t(errors.name.message) : undefined
+                }
                 disabled={isCreatingColumn}
               />
             )}
           />
           <Button type="submit" variant="contained" disabled={isCreatingColumn}>
-            {isCreatingColumn ? t("creating") : t("columns:createColumnButton")}
+            {isCreatingColumn
+              ? t("common:creating")
+              : t("columns:createColumnButton")}
           </Button>
           <Button
             onClick={onCancel}
             variant="outlined"
             disabled={isCreatingColumn}
           >
-            {t("cancel")}
+            {t("common:cancel")}
           </Button>
         </Box>
       </Box>

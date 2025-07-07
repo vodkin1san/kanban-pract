@@ -9,6 +9,6 @@
   "mainPageDescription": "This is the HomePage form. (To be implemented)",
   "appName": "My Kanban Board",
   "language": "Language",
-  "language.english": "English",
-  "language.russian": "Russian"
+  "languageEnglish": "English",
+  "languageRussian": "Russian"
 }

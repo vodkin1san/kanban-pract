@@ -12,8 +12,8 @@ import columnsRu from "./locales/ru/columns.json";
 import tasksRu from "./locales/ru/tasks.json";
 
 export const supportedLanguages = [
-  { code: "en", labelKey: "language.english" },
-  { code: "ru", labelKey: "language.russian" },
+  { code: "en", labelKey: "languageEnglish" },
+  { code: "ru", labelKey: "languageRussian" },
 ];
 
 i18n.use(initReactI18next).init({

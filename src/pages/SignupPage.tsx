@@ -7,6 +7,7 @@ import {
   Container,
   Box,
   Link as MuiLink,
+  Alert,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -27,7 +28,7 @@ const SignupPage = () => {
     control,
     formState: { errors },
   } = useForm<SignupFormInputs>({
-    resolver: zodResolver(signupSchema(t)),
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -41,6 +42,11 @@ const SignupPage = () => {
     );
     if (registerUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
+    } else if (registerUser.rejected.match(resultAction)) {
+      console.error(
+        "auth:signupFailed",
+        resultAction.payload || resultAction.error.message,
+      );
     }
   };
   return (
@@ -58,7 +64,7 @@ const SignupPage = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            {t("signup")}
+            {t("auth:signup")}
           </Typography>
           <Controller
             name="email"
@@ -69,11 +75,14 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="email"
-                label={t("emailLabel")}
+                label={t("auth:emailLabel")}
                 type="email"
                 margin="normal"
                 error={!!errors.email}
-                helperText={errors.email?.message}
+                helperText={
+                  errors.email?.message ? t(errors.email.message) : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -86,11 +95,16 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="password"
-                label={t("passwordLabel")}
+                label={t("auth:passwordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.password}
-                helperText={errors.password?.message}
+                helperText={
+                  errors.password?.message
+                    ? t(errors.password.message)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -103,11 +117,16 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="confirmPassword"
-                label={t("confirmPasswordLabel")}
+                label={t("auth:confirmPasswordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword?.message}
+                helperText={
+                  errors.confirmPassword?.message
+                    ? t(errors.confirmPassword.message)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -118,15 +137,15 @@ const SignupPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? t("registering") : t("signupButton")}
+            {isLoading ? t("auth:registering") : t("auth:signupButton")}
           </Button>
           {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+            <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
               {t("common:error")}: {error}
-            </Typography>
+            </Alert>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.LOGIN} variant="body2">
-            {t("alreadyHaveAccountLogin")}
+            {t("auth:alreadyHaveAccountLogin")}
           </MuiLink>
         </Box>
       </Container>
