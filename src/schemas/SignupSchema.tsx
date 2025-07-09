@@ -2,14 +2,12 @@ import z from "zod";
 
 const signupSchema = z
   .object({
-    email: z.string().email("Укажите ваш email адрес"),
-    password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
-    confirmPassword: z
-      .string()
-      .min(6, "Пароль должен быть не менее 6 символов"),
+    email: z.string().email("emailInvalid"),
+    password: z.string().min(6, "passwordMinLength"),
+    confirmPassword: z.string().min(6, "passwordMinLength"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Пароли не совподают",
+    message: "passwordsMismatch",
     path: ["confirmPassword"],
   });
 

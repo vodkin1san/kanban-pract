@@ -7,15 +7,31 @@ import {
   Container,
   Box,
   Link as MuiLink,
+  Alert,
+  type SxProps,
+  type Theme,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { registerUser } from "../store/userSlice";
-import AppRoutes from "../enums/routes";
-import signupSchema from "../schemas/SignupSchema";
-import type { SignupFormInputs } from "../schemas/SignupSchema";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { registerUser } from "@store/userSlice";
+import AppRoutes from "@enums/routes";
+import signupSchema from "@schemas/SignupSchema";
+import type { SignupFormInputs } from "@schemas/SignupSchema";
+import { useTranslation } from "react-i18next";
+
+const formContainerStyles: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: 8,
+};
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+  const { t } = useTranslation(["auth", "common"]);
+
   const {
     handleSubmit,
     control,
@@ -29,16 +45,17 @@ const SignupPage = () => {
     },
   });
 
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.user);
-
   const onSubmit = async (data: SignupFormInputs) => {
     const resultAction = await dispatch(
       registerUser({ email: data.email, password: data.password }),
     );
     if (registerUser.fulfilled.match(resultAction)) {
       navigate(AppRoutes.HOME);
+    } else if (registerUser.rejected.match(resultAction)) {
+      console.error(
+        "auth:signupFailed",
+        resultAction.payload || resultAction.error.message,
+      );
     }
   };
   return (
@@ -48,15 +65,10 @@ const SignupPage = () => {
           noValidate
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: 8,
-          }}
+          sx={formContainerStyles}
         >
           <Typography component="h1" variant="h5">
-            Регистрация
+            {t("auth:signup")}
           </Typography>
           <Controller
             name="email"
@@ -67,11 +79,16 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email адрес"
+                label={t("auth:emailLabel")}
                 type="email"
                 margin="normal"
                 error={!!errors.email}
-                helperText={errors.email?.message}
+                helperText={
+                  errors.email?.message
+                    ? t(`auth:validation.${errors.email.message}`)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -84,11 +101,16 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="password"
-                label="Пароль"
+                label={t("auth:passwordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.password}
-                helperText={errors.password?.message}
+                helperText={
+                  errors.password?.message
+                    ? t(`auth:validation.${errors.password.message}`)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -101,11 +123,16 @@ const SignupPage = () => {
                 required
                 fullWidth
                 id="confirmPassword"
-                label="Повторите пароль"
+                label={t("auth:confirmPasswordLabel")}
                 type="password"
                 margin="normal"
                 error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword?.message}
+                helperText={
+                  errors.confirmPassword?.message
+                    ? t(`auth:validation.${errors.confirmPassword.message}`)
+                    : undefined
+                }
+                disabled={isLoading}
               />
             )}
           />
@@ -116,15 +143,15 @@ const SignupPage = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? "Регистрация..." : "Зарегистрироваться"}
+            {isLoading ? t("auth:registering") : t("auth:signupButton")}
           </Button>
           {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              Ошибка: {error}
-            </Typography>
+            <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
+              {t("common:error")}: {error}
+            </Alert>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.LOGIN} variant="body2">
-            {"Уже есть аккаунт? Войти"}
+            {t("auth:alreadyHaveAccountLogin")}
           </MuiLink>
         </Box>
       </Container>

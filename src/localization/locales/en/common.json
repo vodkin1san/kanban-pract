@@ -1,0 +1,14 @@
+{
+  "welcome": "Welcome!",
+  "cancel": "Cancel",
+  "create": "Create",
+  "creating": "Creating...",
+  "loading": "Loading...",
+  "error": "Error:",
+  "mainPageTitle": "Main Page",
+  "mainPageDescription": "This is the HomePage form. (To be implemented)",
+  "appName": "My Kanban Board",
+  "language": "Language",
+  "languageEnglish": "English",
+  "languageRussian": "Russian"
+}

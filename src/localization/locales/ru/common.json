@@ -1,0 +1,14 @@
+{
+  "welcome": "Добро пожаловать!",
+  "cancel": "Отмена",
+  "create": "Создать",
+  "creating": "Создание...",
+  "loading": "Загрузка...",
+  "error": "Ошибка:",
+  "mainPageTitle": "Главная страница",
+  "mainPageDescription": "Это форма главной страницы. (Будет реализовано)",
+  "appName": "Моя Канбан Доска",
+  "language": "Язык",
+  "languageEnglish": "Английский",
+  "languageRussian": "Русский"
+}

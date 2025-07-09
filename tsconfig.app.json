@@ -30,7 +30,8 @@
       "@modules/*": ["./src/modules/*"],
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./src/pages/*"],
-      "@schemas/*": ["./src/schemas/*"]
+      "@schemas/*": ["./src/schemas/*"],
+      "@localization/*": ["./src/localization/*"]
     }
   },
   "include": ["src"]
