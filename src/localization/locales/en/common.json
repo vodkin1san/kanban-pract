@@ -4,6 +4,7 @@
   "create": "Create",
   "creating": "Creating...",
   "loading": "Loading...",
+  "loginLoading": "Login loading...",
   "error": "Error:",
   "mainPageTitle": "Main Page",
   "mainPageDescription": "This is the HomePage form. (To be implemented)",

@@ -23,7 +23,7 @@ const HomePage = () => {
       navigate(AppRoutes.LOGIN);
     } else if (logoutUser.rejected.match(resultAction)) {
       console.error(
-        "auth:logoutFailed",
+        t(`auth:logoutFailed`),
         resultAction.payload || resultAction.error.message,
       );
     }

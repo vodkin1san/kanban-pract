@@ -16,6 +16,7 @@ interface UserState {
   email: string | null;
   isLoading: boolean;
   error: string | null;
+  isAuthChecked: boolean;
 }
 
 const initialState: UserState = {
@@ -23,6 +24,7 @@ const initialState: UserState = {
   email: null,
   isLoading: false,
   error: null,
+  isAuthChecked: false,
 };
 
 export const loginUser = createAsyncThunk(
@@ -95,12 +97,14 @@ const userSlice = createSlice({
       state.email = action.payload.email;
       state.isLoading = false;
       state.error = null;
+      state.isAuthChecked = true;
     },
     clearUser: (state) => {
       state.uid = null;
       state.email = null;
       state.isLoading = false;
       state.error = null;
+      state.isAuthChecked = true;
     },
   },
   extraReducers: (builder) => {
