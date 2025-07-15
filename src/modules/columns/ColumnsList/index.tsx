@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress, Alert } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
+import { fetchTask } from "@store/taskSlice";
 import { useTranslation } from "react-i18next";
+import ColumnCard from "./ColumnCard";
 
 export interface ColumnsListProps {
   userId: string;
@@ -19,35 +21,63 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
 
   useEffect(() => {
     dispatch(fetchColumn(userId));
+    dispatch(fetchTask(userId));
   }, [dispatch, userId]);
 
   if (isFetchingColumns) {
-    return <p>{t("loadingColumns")}</p>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>
+          {t("columns:loadingColumns", { ns: "columns" })}
+        </Typography>
+      </Box>
+    );
   }
 
   if (error) {
     return (
-      <p style={{ color: "red" }}>
-        {t("error")}: {error}
-      </p>
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">
+          {t("common:error")}: {error}
+        </Alert>
+      </Box>
     );
   }
 
   return (
     <Box>
       <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-        {t("myColumnsTitle")}
+        {t("columns:myColumnsTitle")}
       </Typography>
       {columns.length > 0 ? (
-        <ul>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 3,
+            p: 3,
+            overflowX: "auto",
+            alignItems: "flex-start",
+          }}
+        >
           {columns.map((column) => (
-            <li key={column.id}>
-              {column.name} (ID: {column.id})
-            </li>
+            <ColumnCard
+              key={column.id}
+              columnId={column.id}
+              columnName={column.name}
+              userId={userId}
+            />
           ))}
-        </ul>
+        </Box>
       ) : (
-        <Typography>{t("noColumnsYet")}</Typography>
+        <Typography>{t("columns:noColumnsYet")}</Typography>
       )}
     </Box>
   );

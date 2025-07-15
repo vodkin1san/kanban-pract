@@ -1,9 +1,16 @@
 {
+  "createTaskTitle": "Создать новую задачу",
+  "addCard": "Добавить задачу",
   "taskTitleLabel": "Название задачи",
   "taskDescriptionLabel": "Описание",
   "taskDueDateLabel": "Дата выполнения",
+  "taskOrderLabel": "Порядок",
   "taskColumnLabel": "Прикрепить к колонке",
   "createTaskButton": "Создать задачу",
   "loadingTasks": "Загрузка задач...",
-  "noTasksYet": "Задачи пока не созданы."
+  "noTasksYet": "Задачи пока не созданы.",
+  "validation": {
+    "titleRequired": "Название задачи обязательно.",
+    "orderMinZero": "Порядок должен быть 0 или больше."
+  }
 }
