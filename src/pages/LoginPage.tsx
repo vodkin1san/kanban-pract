@@ -14,7 +14,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { loginUser } from "@store/userSlice";
+import { loginUser } from "@store/authSlice";
+import { setUser } from "@store/userProfileSlice";
 import AppRoutes from "@enums/routes";
 import loginSchema from "@schemas/LoginSchema";
 import type { LoginFormInputs } from "@schemas/LoginSchema";
@@ -30,7 +31,7 @@ const formContainerStyles: SxProps<Theme> = {
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.user);
+  const { isLoading, error: authError } = useAppSelector((state) => state.auth);
   const { t } = useTranslation(["auth", "common"]);
 
   const {
@@ -49,7 +50,14 @@ const LoginPage = () => {
     const resultAction = await dispatch(
       loginUser({ email: data.email, password: data.password }),
     );
+
     if (loginUser.fulfilled.match(resultAction)) {
+      dispatch(
+        setUser({
+          uid: resultAction.payload.uid,
+          email: resultAction.payload.email,
+        }),
+      );
       navigate(AppRoutes.HOME);
     } else if (loginUser.rejected.match(resultAction)) {
       console.error(
@@ -124,9 +132,9 @@ const LoginPage = () => {
           >
             {isLoading ? t("auth:loggingIn") : t("auth:loginButton")}
           </Button>
-          {error && (
+          {authError && (
             <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
-              {t("common:error")}: {error}
+              {t("common:error")}: {authError}
             </Alert>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.SIGNUP}>

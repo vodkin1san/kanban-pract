@@ -4,16 +4,15 @@ import { Button, Alert } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "@modules/columns/ColumnsList/index";
-import { logoutUser } from "@store/userSlice";
+import { logoutUser } from "@store/authSlice";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
 import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { uid: userId, error: userError } = useAppSelector(
-    (state) => state.user,
-  );
+  const { uid: userId } = useAppSelector((state) => state.userProfile);
+  const { error: authError } = useAppSelector((state) => state.auth);
   const { t } = useTranslation(["common", "auth", "columns"]);
 
   const handleLogout = async () => {
@@ -41,9 +40,9 @@ const HomePage = () => {
         {t(`auth:navToSignUp`)}
         <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
       </p>
-      {userError && (
+      {authError && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {userError}
+          {authError}
         </Alert>
       )}
 

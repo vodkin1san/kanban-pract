@@ -3,12 +3,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import AppRoutes from "@enums/routes";
 import { useAppSelector } from "@store/hooks";
 import { CircularProgress, Box } from "@mui/material";
-import { useTranslation } from "react-i18next";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const { uid, isAuthChecked } = useAppSelector((state) => state.user);
-  const { t } = useTranslation(["common"]);
+  const { uid } = useAppSelector((state) => state.userProfile);
+  const { isAuthChecked } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthChecked && !uid) {
@@ -27,7 +26,6 @@ const PrivateRoute = () => {
         }}
       >
         <CircularProgress />
-        <div>{t(`common:loginLoading`)}</div>
       </Box>
     );
   }
@@ -35,6 +33,7 @@ const PrivateRoute = () => {
   if (uid) {
     return <Outlet />;
   }
+
   return null;
 };
 

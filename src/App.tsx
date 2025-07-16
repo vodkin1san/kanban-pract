@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
 import { auth } from "@myFirebase/config.ts";
 import { useAppDispatch } from "@store/hooks";
-import { setUser, clearUser } from "@store/userSlice";
+import { setUser, clearUser } from "@store/userProfileSlice";
+import { setAuthChecked } from "@store/authSlice";
 import { ColumnsPage } from "@pages/ColumnsPage";
 import { TasksPage } from "@pages/TasksPage";
 import { HomePage } from "@pages/HomePage/HomePage.tsx";
@@ -13,7 +14,6 @@ import { LoginPage } from "@pages/LoginPage";
 import { PrivateRoute } from "@components/PrivateRoute";
 import AppRoutes from "@enums/routes";
 import { useTranslation } from "react-i18next";
-
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
 
 function App() {
@@ -27,7 +27,10 @@ function App() {
       } else {
         dispatch(clearUser());
       }
+
+      dispatch(setAuthChecked(true));
     });
+
     return () => unsubscribe();
   }, [dispatch]);
 

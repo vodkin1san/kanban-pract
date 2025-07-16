@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { registerUser } from "@store/userSlice";
+import { registerUser } from "@store/authSlice";
+import { setUser } from "@store/userProfileSlice";
 import AppRoutes from "@enums/routes";
 import signupSchema from "@schemas/SignupSchema";
 import type { SignupFormInputs } from "@schemas/SignupSchema";
@@ -29,7 +30,7 @@ const formContainerStyles: SxProps<Theme> = {
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.user);
+  const { isLoading, error: authError } = useAppSelector((state) => state.auth);
   const { t } = useTranslation(["auth", "common"]);
 
   const {
@@ -49,7 +50,14 @@ const SignupPage = () => {
     const resultAction = await dispatch(
       registerUser({ email: data.email, password: data.password }),
     );
+
     if (registerUser.fulfilled.match(resultAction)) {
+      dispatch(
+        setUser({
+          uid: resultAction.payload.uid,
+          email: resultAction.payload.email,
+        }),
+      );
       navigate(AppRoutes.HOME);
     } else if (registerUser.rejected.match(resultAction)) {
       console.error(
@@ -58,6 +66,7 @@ const SignupPage = () => {
       );
     }
   };
+
   return (
     <>
       <Container maxWidth="xs">
@@ -145,9 +154,9 @@ const SignupPage = () => {
           >
             {isLoading ? t("auth:registering") : t("auth:signupButton")}
           </Button>
-          {error && (
+          {authError && (
             <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
-              {t("common:error")}: {error}
+              {t("common:error")}: {authError}
             </Alert>
           )}
           <MuiLink component={RouterLink} to={AppRoutes.LOGIN} variant="body2">
