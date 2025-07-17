@@ -25,7 +25,7 @@ const CreateColumnForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<CreateColumnFormInputs>({
     resolver: zodResolver(columnFormSchema),
     defaultValues: {
@@ -82,11 +82,7 @@ const CreateColumnForm = ({
             />
           )}
         />
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={isCreatingColumn || !isValid}
-        >
+        <Button type="submit" variant="contained" disabled={isCreatingColumn}>
           {isCreatingColumn
             ? t("common:creating")
             : t("columns:createColumnButton")}

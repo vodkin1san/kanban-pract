@@ -36,7 +36,7 @@ const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreateTaskFormInputs>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
@@ -163,7 +163,11 @@ const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
             />
           )}
         />
-        <Button type="submit" variant="contained" disabled={isCreatingTask}>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isCreatingTask || !isValid}
+        >
           {isCreatingTask ? (
             <CircularProgress size={24} />
           ) : (
