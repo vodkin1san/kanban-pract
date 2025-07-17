@@ -4,16 +4,16 @@ import { Button, Alert } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "@modules/columns/ColumnsList/index";
-import { logoutUser } from "@store/userSlice";
+import { logoutUser } from "@store/authSlice";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
 import { useTranslation } from "react-i18next";
+import { selectUserId, selectAuthError } from "@store/selectors";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { uid: userId, error: userError } = useAppSelector(
-    (state) => state.user,
-  );
+  const userId = useAppSelector(selectUserId);
+  const authError = useAppSelector(selectAuthError);
   const { t } = useTranslation(["common", "auth", "columns"]);
 
   const handleLogout = async () => {
@@ -23,7 +23,7 @@ const HomePage = () => {
       navigate(AppRoutes.LOGIN);
     } else if (logoutUser.rejected.match(resultAction)) {
       console.error(
-        "auth:logoutFailed",
+        `Logout failed:`,
         resultAction.payload || resultAction.error.message,
       );
     }
@@ -41,9 +41,9 @@ const HomePage = () => {
         {t(`auth:navToSignUp`)}
         <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
       </p>
-      {userError && (
+      {authError && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {userError}
+          {authError}
         </Alert>
       )}
 
