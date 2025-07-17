@@ -29,7 +29,9 @@ const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
 }: CreateTaskFormProps) => {
   const { t } = useTranslation(["common", "tasks"]);
   const dispatch = useAppDispatch();
-  const { isCreatingTask, error } = useAppSelector((state) => state.tasks);
+  const {
+    create: { loading: isCreatingTask, error: error },
+  } = useAppSelector((state) => state.tasks);
 
   const {
     handleSubmit,

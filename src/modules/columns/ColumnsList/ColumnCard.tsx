@@ -1,17 +1,37 @@
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, type SxProps, type Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
+import { ModalWrapper } from "@modules/columns/ModalWrapper";
 import CreateTaskFormProps from "@pages/HomePage/CreateTaskForm";
 import { useAppSelector } from "@store/hooks";
 import { selectTasksByColumnId } from "@store/taskSlice";
 import { type RootState } from "@store/index";
 import { type Task } from "@store/taskSlice";
 
-interface ColumnCardProps {
+export interface ColumnCardProps {
   columnId: string;
   userId: string;
   columnName: string;
 }
+
+const columnCardStyles: SxProps<Theme> = {
+  border: "1px solid #ccc",
+  borderRadius: 2,
+  p: 2,
+  minWidth: 280,
+  maxWidth: 320,
+  backgroundColor: "#f4f5f7",
+  display: "flex",
+  flexDirection: "column",
+  gap: 1,
+};
+
+const taskItemStyles: SxProps<Theme> = {
+  p: 1,
+  mb: 1,
+  backgroundColor: "#fff",
+  borderRadius: 1,
+  boxShadow: 1,
+};
 
 const ColumnCard: React.FC<ColumnCardProps> = ({
   columnId,
@@ -24,35 +44,14 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
   );
 
   return (
-    <Box
-      sx={{
-        border: "1px solid #ccc",
-        borderRadius: 2,
-        p: 2,
-        minWidth: 280,
-        maxWidth: 320,
-        backgroundColor: "#f4f5f7",
-        display: "flex",
-        flexDirection: "column",
-        gap: 1,
-      }}
-    >
+    <Box sx={columnCardStyles}>
       <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
         {columnName}
       </Typography>
       <Box sx={{ minHeight: 50, maxHeight: 400, overflowY: "auto" }}>
         {tasks.length > 0 ? (
           tasks.map((task: Task) => (
-            <Box
-              key={task.id}
-              sx={{
-                p: 1,
-                mb: 1,
-                backgroundColor: "#fff",
-                borderRadius: 1,
-                boxShadow: 1,
-              }}
-            >
+            <Box key={task.id} sx={taskItemStyles}>
               <Typography variant="body1">{task.title}</Typography>
             </Box>
           ))

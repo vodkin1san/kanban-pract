@@ -5,7 +5,6 @@
   "loadingColumns": "Загрузка колонок...",
   "myColumnsTitle": "Мои Колонки:",
   "noColumnsYet": "У вас пока нет колонок. Создайте новую!",
-  "createColumnFailed": "Ошибка создания колонки:",
 
   "validation.columnNameRequired": "Название колонки не может быть пустым"
 }

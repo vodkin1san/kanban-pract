@@ -1,17 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
-import userProfileReducer from "./userProfileSlice";
-
-import columnReducer from "./columnSlice";
-import taskReducer from "./taskSlice";
+import rootReducer from "./rootReducer";
 
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    userProfile: userProfileReducer,
-    column: columnReducer,
-    tasks: taskReducer,
-  },
+  reducer: rootReducer,
 });
 
 export type AppDispatch = typeof store.dispatch;

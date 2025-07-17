@@ -25,7 +25,7 @@ const CreateColumnForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreateColumnFormInputs>({
     resolver: zodResolver(columnFormSchema),
     defaultValues: {
@@ -41,7 +41,7 @@ const CreateColumnForm = ({
       onSuccess();
     } else if (createColumn.rejected.match(resultAction)) {
       console.error(
-        "colums:createColumnFailed",
+        "Failed to create column:",
         resultAction.payload || resultAction.error.message,
       );
     }
@@ -82,7 +82,11 @@ const CreateColumnForm = ({
             />
           )}
         />
-        <Button type="submit" variant="contained" disabled={isCreatingColumn}>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isCreatingColumn || !isValid}
+        >
           {isCreatingColumn
             ? t("common:creating")
             : t("columns:createColumnButton")}

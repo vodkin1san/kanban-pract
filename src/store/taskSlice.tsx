@@ -40,21 +40,46 @@ const taskAdapter = createEntityAdapter<Task>({
 });
 
 export interface TaskState {
-  isLoadingTasks: boolean;
-  isCreatingTask: boolean;
-  isUpdatingTask: boolean;
-  isDeletingTask: boolean;
-  error: string | null;
+  fetch: {
+    loading: boolean;
+    error: string | null;
+  };
+
+  create: {
+    loading: boolean;
+    error: string | null;
+  };
+
+  update: {
+    loading: boolean;
+    error: string | null;
+  };
+
+  delete: {
+    loading: boolean;
+    error: string | null;
+  };
   ids: string[];
   entities: Record<string, Task>;
 }
 
 const initialState: TaskState = taskAdapter.getInitialState({
-  isLoadingTasks: false,
-  isCreatingTask: false,
-  isUpdatingTask: false,
-  isDeletingTask: false,
-  error: null,
+  fetch: {
+    loading: false,
+    error: null,
+  },
+  create: {
+    loading: false,
+    error: null,
+  },
+  update: {
+    loading: false,
+    error: null,
+  },
+  delete: {
+    loading: false,
+    error: null,
+  },
 });
 
 interface CreateTaskPayload {
@@ -156,58 +181,62 @@ const taskSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createTask.pending, (state) => {
-        state.isCreatingTask = true;
-        state.error = null;
+        state.create.loading = true;
+        state.create.error = null;
       })
       .addCase(createTask.fulfilled, (state, action: PayloadAction<Task>) => {
-        state.isCreatingTask = false;
-        state.error = null;
+        state.create.loading = false;
+        state.create.error = null;
         taskAdapter.addOne(state, action.payload);
       })
       .addCase(createTask.rejected, (state, action) => {
-        state.isCreatingTask = false;
-        state.error = action.payload as string;
+        state.create.loading = false;
+        state.create.error = action.payload as string;
       })
+
       .addCase(fetchTask.pending, (state) => {
-        state.isLoadingTasks = true;
-        state.error = null;
+        state.fetch.loading = true;
+        state.fetch.error = null;
       })
       .addCase(fetchTask.fulfilled, (state, action: PayloadAction<Task[]>) => {
-        state.isLoadingTasks = false;
+        state.fetch.loading = false;
+        state.fetch.error = null;
         taskAdapter.setAll(state, action.payload);
       })
       .addCase(fetchTask.rejected, (state, action) => {
-        state.isLoadingTasks = false;
-        state.error = action.payload as string;
+        state.fetch.loading = false;
+        state.fetch.error = action.payload as string;
       })
+
       .addCase(updateTask.pending, (state) => {
-        state.isUpdatingTask = true;
-        state.error = null;
+        state.update.loading = true;
+        state.update.error = null;
       })
       .addCase(
         updateTask.fulfilled,
         (state, action: PayloadAction<UpdateTaskPayload>) => {
-          state.isUpdatingTask = false;
-          state.error = null;
+          state.update.loading = false;
+          state.update.error = null;
           taskAdapter.updateOne(state, action.payload);
         },
       )
       .addCase(updateTask.rejected, (state, action) => {
-        state.isUpdatingTask = false;
-        state.error = action.payload as string;
+        state.update.loading = false;
+        state.update.error = action.payload as string;
       })
+
       .addCase(deleteTask.pending, (state) => {
-        state.isDeletingTask = true;
-        state.error = null;
+        state.delete.loading = true;
+        state.delete.error = null;
       })
       .addCase(deleteTask.fulfilled, (state, action: PayloadAction<string>) => {
-        state.isDeletingTask = false;
-        state.error = null;
+        state.delete.loading = false;
+        state.delete.error = null;
         taskAdapter.removeOne(state, action.payload);
       })
       .addCase(deleteTask.rejected, (state, action) => {
-        state.isDeletingTask = false;
-        state.error = action.payload as string;
+        state.delete.loading = false;
+        state.delete.error = action.payload as string;
       });
   },
 });
