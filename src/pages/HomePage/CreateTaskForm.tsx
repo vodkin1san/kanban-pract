@@ -50,12 +50,12 @@ const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
   const onSubmit = async (data: CreateTaskFormInputs) => {
     const resultAction = await dispatch(
       createTask({
+        userId,
+        columnId,
         title: data.title,
         description: data.description,
         dueDate: data.dueDate,
         order: data.order,
-        userId,
-        columnId,
       }),
     );
     if (createTask.fulfilled.match(resultAction)) {
