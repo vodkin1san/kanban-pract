@@ -14,7 +14,6 @@ import {
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { registerUser } from "@store/authSlice";
-import { setUser } from "@store/userProfileSlice";
 import AppRoutes from "@enums/routes";
 import signupSchema from "@schemas/SignupSchema";
 import type { SignupFormInputs } from "@schemas/SignupSchema";
@@ -52,16 +51,10 @@ const SignupPage = () => {
     );
 
     if (registerUser.fulfilled.match(resultAction)) {
-      dispatch(
-        setUser({
-          uid: resultAction.payload.uid,
-          email: resultAction.payload.email,
-        }),
-      );
       navigate(AppRoutes.HOME);
     } else if (registerUser.rejected.match(resultAction)) {
       console.error(
-        "auth:signupFailed",
+        "Signup Failed",
         resultAction.payload || resultAction.error.message,
       );
     }

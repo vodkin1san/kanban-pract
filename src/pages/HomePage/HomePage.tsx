@@ -7,12 +7,13 @@ import { ColumnsList } from "@modules/columns/ColumnsList/index";
 import { logoutUser } from "@store/authSlice";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
 import { useTranslation } from "react-i18next";
+import { selectUserId, selectAuthError } from "@store/selectors";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { uid: userId } = useAppSelector((state) => state.userProfile);
-  const { error: authError } = useAppSelector((state) => state.auth);
+  const userId = useAppSelector(selectUserId);
+  const authError = useAppSelector(selectAuthError);
   const { t } = useTranslation(["common", "auth", "columns"]);
 
   const handleLogout = async () => {
@@ -22,7 +23,7 @@ const HomePage = () => {
       navigate(AppRoutes.LOGIN);
     } else if (logoutUser.rejected.match(resultAction)) {
       console.error(
-        t(`auth:logoutFailed`),
+        `Logout failed:`,
         resultAction.payload || resultAction.error.message,
       );
     }

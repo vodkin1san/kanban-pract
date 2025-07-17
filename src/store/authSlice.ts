@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@myFirebase/config";
 import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
+import { setUser, clearUser } from "./userProfileSlice";
 
 interface AuthState {
   isLoading: boolean;
@@ -27,7 +28,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue },
+    { rejectWithValue, dispatch },
   ) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -35,7 +36,12 @@ export const loginUser = createAsyncThunk(
         email,
         password,
       );
-
+      dispatch(
+        setUser({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+        }),
+      );
       return {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -51,7 +57,7 @@ export const registerUser = createAsyncThunk(
   "auth/register",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue },
+    { rejectWithValue, dispatch },
   ) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -59,7 +65,12 @@ export const registerUser = createAsyncThunk(
         email,
         password,
       );
-
+      dispatch(
+        setUser({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+        }),
+      );
       return {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -73,9 +84,10 @@ export const registerUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   "auth/logout",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       await signOut(auth);
+      dispatch(clearUser());
       return;
     } catch (error) {
       const errorMessage = getFirebaseErrorMessage(error);

@@ -15,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { loginUser } from "@store/authSlice";
-import { setUser } from "@store/userProfileSlice";
 import AppRoutes from "@enums/routes";
 import loginSchema from "@schemas/LoginSchema";
 import type { LoginFormInputs } from "@schemas/LoginSchema";
@@ -52,16 +51,10 @@ const LoginPage = () => {
     );
 
     if (loginUser.fulfilled.match(resultAction)) {
-      dispatch(
-        setUser({
-          uid: resultAction.payload.uid,
-          email: resultAction.payload.email,
-        }),
-      );
       navigate(AppRoutes.HOME);
     } else if (loginUser.rejected.match(resultAction)) {
       console.error(
-        "auth:loginFailed",
+        `Login failed:`,
         resultAction.payload || resultAction.error.message,
       );
     }
