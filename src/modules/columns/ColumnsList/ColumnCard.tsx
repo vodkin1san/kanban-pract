@@ -5,7 +5,7 @@ import CreateTaskFormProps from "@pages/HomePage/CreateTaskForm";
 import { useAppSelector } from "@store/hooks";
 import { selectTasksByColumnId } from "@src/store/tasks/taskSlice";
 import { type RootState } from "@store/index";
-import { type Task } from "@src/store/tasks/taskSlice";
+import { type Task } from "@src/store/tasks/taskTypes";
 
 export interface ColumnCardProps {
   columnId: string;

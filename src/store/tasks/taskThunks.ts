@@ -13,7 +13,11 @@ import {
 import type { FirebaseError } from "firebase/app";
 import type { Task, CreateTaskPayload, UpdateTaskPayload } from "./taskTypes";
 
-export const createTask = createAsyncThunk(
+export const createTask = createAsyncThunk<
+  Task,
+  CreateTaskPayload,
+  { rejectValue: string }
+>(
   "task/createTask",
   async (taskData: CreateTaskPayload, { rejectWithValue }) => {
     try {
@@ -26,7 +30,7 @@ export const createTask = createAsyncThunk(
         ...taskData,
         createAt: new Date().toISOString(),
         description: taskData.description || null,
-      } as Task;
+      };
     } catch (err) {
       const firebaseError = err as FirebaseError;
       return rejectWithValue(firebaseError.message);
@@ -63,30 +67,31 @@ export const deleteTask = createAsyncThunk(
   },
 );
 
-export const fetchTask = createAsyncThunk(
-  "task/fetchTask",
-  async (userId: string, { rejectWithValue }) => {
-    try {
-      const taskCollectionRef = collection(db, "tasks");
-      const q = query(taskCollectionRef, where("userId", "==", userId));
-      const querySnapshot = await getDocs(q);
-      const tasks: Task[] = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          description: data.description || null,
-          createAt: data.createAt,
-          dueDate: data.dueDate || null,
-          columnId: data.columnId || null,
-          userId: data.userId,
-          order: data.order ?? 0,
-        } as Task;
-      });
-      return tasks;
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      return rejectWithValue(firebaseError.message);
-    }
-  },
-);
+export const fetchTask = createAsyncThunk<
+  Task[],
+  string,
+  { rejectValue: string }
+>("task/fetchTask", async (userId: string, { rejectWithValue }) => {
+  try {
+    const taskCollectionRef = collection(db, "tasks");
+    const q = query(taskCollectionRef, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const tasks: Task[] = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        title: data.title,
+        description: data.description || null,
+        createAt: data.createAt,
+        dueDate: data.dueDate || null,
+        columnId: data.columnId || null,
+        userId: data.userId,
+        order: data.order ?? 0,
+      };
+    });
+    return tasks;
+  } catch (err) {
+    const firebaseError = err as FirebaseError;
+    return rejectWithValue(firebaseError.message);
+  }
+});
