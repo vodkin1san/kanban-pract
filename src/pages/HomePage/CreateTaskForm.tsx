@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { createTask } from "@store/taskSlice";
+import { createTask } from "@src/store/tasks/taskSlice";
 import createTaskSchema from "@schemas/CreateTaskSchema";
 import type { CreateTaskFormInputs } from "@schemas/CreateTaskSchema";
 

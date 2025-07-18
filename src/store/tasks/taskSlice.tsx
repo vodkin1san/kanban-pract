@@ -2,33 +2,11 @@ import {
   createSlice,
   createSelector,
   createEntityAdapter,
-  createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import { db } from "@myFirebase/config";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
-import type { FirebaseError } from "firebase/app";
 import type { RootState } from "@store/index";
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  createAt: string;
-  dueDate: string | null;
-  columnId: string | null;
-  userId: string;
-  order: number;
-}
+import type { Task, TaskState, UpdateTaskPayload } from "./taskTypes";
+import { createTask, fetchTask, updateTask, deleteTask } from "./taskThunks";
 
 const taskAdapter = createEntityAdapter<Task>({
   sortComparer: (a: Task, b: Task) => {
@@ -38,30 +16,6 @@ const taskAdapter = createEntityAdapter<Task>({
     return a.createAt.localeCompare(b.createAt);
   },
 });
-
-export interface TaskState {
-  fetch: {
-    loading: boolean;
-    error: string | null;
-  };
-
-  create: {
-    loading: boolean;
-    error: string | null;
-  };
-
-  update: {
-    loading: boolean;
-    error: string | null;
-  };
-
-  delete: {
-    loading: boolean;
-    error: string | null;
-  };
-  ids: string[];
-  entities: Record<string, Task>;
-}
 
 const initialState: TaskState = taskAdapter.getInitialState({
   fetch: {
@@ -81,98 +35,6 @@ const initialState: TaskState = taskAdapter.getInitialState({
     error: null,
   },
 });
-
-interface CreateTaskPayload {
-  title: string;
-  description: string | null;
-  dueDate: string | null;
-  columnId: string | null;
-  userId: string;
-  order: number;
-}
-
-interface UpdateTaskPayload {
-  id: string;
-  changes: Partial<Task>;
-}
-
-const createTask = createAsyncThunk(
-  "task/createTask",
-  async (taskData: CreateTaskPayload, { rejectWithValue }) => {
-    try {
-      const docRef = await addDoc(collection(db, "tasks"), {
-        ...taskData,
-        createAt: new Date().toISOString(),
-      });
-      return {
-        id: docRef.id,
-        ...taskData,
-        createAt: new Date().toISOString(),
-        description: taskData.description || null,
-      } as Task;
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      return rejectWithValue(firebaseError.message);
-    }
-  },
-);
-
-const updateTask = createAsyncThunk(
-  "task/updateTask",
-  async ({ id, changes }: UpdateTaskPayload, { rejectWithValue }) => {
-    try {
-      await updateDoc(doc(db, "tasks", id), changes);
-      return {
-        id,
-        changes,
-      };
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      return rejectWithValue(firebaseError.message);
-    }
-  },
-);
-
-const deleteTask = createAsyncThunk(
-  "task/deleteTask",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      await deleteDoc(doc(db, "tasks", id));
-      return id;
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      return rejectWithValue(firebaseError.message);
-    }
-  },
-);
-
-const fetchTask = createAsyncThunk(
-  "task/fetchTask",
-  async (userId: string, { rejectWithValue }) => {
-    try {
-      const taskCollectionRef = collection(db, "tasks");
-      const q = query(taskCollectionRef, where("userId", "==", userId));
-      const querySnapshot = await getDocs(q);
-      const tasks: Task[] = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          description: data.description || null,
-          createAt: data.createAt,
-          dueDate: data.dueDate || null,
-          columnId: data.columnId || null,
-          userId: data.userId,
-          order: data.order ?? 0,
-        } as Task;
-      });
-      return tasks;
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      return rejectWithValue(firebaseError.message);
-    }
-  },
-);
 
 const taskSlice = createSlice({
   name: "task",

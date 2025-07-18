@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Box, Typography, CircularProgress, Alert } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
-import { fetchTask } from "@store/taskSlice";
+import { fetchTask } from "@src/store/tasks/taskSlice";
 import { useTranslation } from "react-i18next";
 import ColumnCard from "./ColumnCard";
 
