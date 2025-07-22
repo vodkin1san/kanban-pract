@@ -21,7 +21,7 @@ export interface CreateTaskFormProps {
   onCancel: () => void;
 }
 
-const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
+const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   userId,
   columnId,
   onSuccess,
@@ -182,4 +182,4 @@ const CreateTaskFormProps: React.FC<CreateTaskFormProps> = ({
   );
 };
 
-export default CreateTaskFormProps;
+export default CreateTaskForm;

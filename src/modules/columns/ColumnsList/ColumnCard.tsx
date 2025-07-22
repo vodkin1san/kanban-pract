@@ -1,7 +1,7 @@
 import { Typography, Box, type SxProps, type Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { ModalWrapper } from "@modules/columns/ModalWrapper";
-import CreateTaskFormProps from "@pages/HomePage/CreateTaskForm";
+import CreateTaskForm from "@pages/HomePage/CreateTaskForm";
 import { useAppSelector } from "@store/hooks";
 import { selectTasksByColumnId } from "@src/store/tasks/taskSlice";
 import { type RootState } from "@store/index";
@@ -63,7 +63,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
       </Box>
       <ModalWrapper openButtonText={t("tasks:addCard")}>
         {(onClose) => (
-          <CreateTaskFormProps
+          <CreateTaskForm
             onCancel={onClose}
             onSuccess={onClose}
             userId={userId}

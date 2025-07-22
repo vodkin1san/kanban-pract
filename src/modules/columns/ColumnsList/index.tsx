@@ -35,9 +35,7 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
         }}
       >
         <CircularProgress />
-        <Typography sx={{ ml: 2 }}>
-          {t("columns:loadingColumns", { ns: "columns" })}
-        </Typography>
+        <Typography sx={{ ml: 2 }}>{t("columns:loadingColumns")}</Typography>
       </Box>
     );
   }
