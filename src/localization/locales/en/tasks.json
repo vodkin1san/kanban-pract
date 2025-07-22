@@ -1,9 +1,16 @@
 {
+  "createTaskTitle": "Create New Task",
+  "addCard": "Add card",
   "taskTitleLabel": "Task Title",
   "taskDescriptionLabel": "Description",
   "taskDueDateLabel": "Due Date",
+  "taskOrderLabel": "Order",
   "taskColumnLabel": "Attach to Column",
   "createTaskButton": "Create Task",
   "loadingTasks": "Loading tasks...",
-  "noTasksYet": "No tasks created yet."
+  "noTasksYet": "No tasks created yet.",
+  "validation": {
+    "titleRequired": "Task title is required.",
+    "orderMinZero": "Order must be 0 or greater."
+  }
 }

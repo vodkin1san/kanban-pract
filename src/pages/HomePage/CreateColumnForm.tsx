@@ -41,7 +41,7 @@ const CreateColumnForm = ({
       onSuccess();
     } else if (createColumn.rejected.match(resultAction)) {
       console.error(
-        "colums:createColumnFailed",
+        "Failed to create column:",
         resultAction.payload || resultAction.error.message,
       );
     }
