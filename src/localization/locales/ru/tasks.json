@@ -1,5 +1,6 @@
 {
   "createTaskTitle": "Создать новую задачу",
+  "editTastTitle": "Редактировать задачу",
   "addCard": "Добавить задачу",
   "taskTitleLabel": "Название задачи",
   "taskDescriptionLabel": "Описание",
@@ -7,6 +8,7 @@
   "taskOrderLabel": "Порядок",
   "taskColumnLabel": "Прикрепить к колонке",
   "createTaskButton": "Создать задачу",
+  "editTaskButton": "Редактировать",
   "loadingTasks": "Загрузка задач...",
   "noTasksYet": "Задачи пока не созданы.",
   "validation": {
