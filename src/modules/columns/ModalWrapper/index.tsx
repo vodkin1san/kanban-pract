@@ -13,9 +13,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button sx={{ mr: 3 }} onClick={() => setIsOpen(true)}>
-        {openButtonText}
-      </Button>
+      <Button onClick={() => setIsOpen(true)}>{openButtonText}</Button>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         {children(() => setIsOpen(false))}
       </Dialog>

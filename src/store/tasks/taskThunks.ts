@@ -21,14 +21,15 @@ export const createTask = createAsyncThunk<
   "task/createTask",
   async (taskData: CreateTaskPayload, { rejectWithValue }) => {
     try {
+      const createAt = new Date().toISOString();
       const docRef = await addDoc(collection(db, "tasks"), {
         ...taskData,
-        createAt: new Date().toISOString(),
+        createAt: createAt,
       });
       return {
         id: docRef.id,
         ...taskData,
-        createAt: new Date().toISOString(),
+        createAt: createAt,
         description: taskData.description || null,
       };
     } catch (err) {

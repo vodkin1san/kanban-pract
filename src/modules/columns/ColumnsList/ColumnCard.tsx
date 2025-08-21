@@ -63,7 +63,12 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
         {tasks.length > 0 ? (
           tasks.map((task: Task) => (
             <Box key={task.id} sx={taskItemStyles}>
-              <Typography variant="body1">{task.title}</Typography>
+              <Typography
+                style={{ display: "flex", alignItems: "center" }}
+                variant="body1"
+              >
+                {task.title}
+              </Typography>
               <Box
                 sx={{
                   opacity: "0",
