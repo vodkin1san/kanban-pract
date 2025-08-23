@@ -6,7 +6,14 @@ import {
 } from "@reduxjs/toolkit";
 import type { RootState } from "@store/index";
 import type { Task, TaskState, UpdateTaskPayload } from "./taskTypes";
-import { createTask, fetchTask, updateTask, deleteTask } from "./taskThunks";
+import {
+  createTask,
+  fetchTask,
+  updateTask,
+  deleteTask,
+  reorderTaskInColumn,
+  updateTaskColumn,
+} from "./taskThunks";
 
 const taskAdapter = createEntityAdapter<Task>({
   sortComparer: (a: Task, b: Task) => {
@@ -99,6 +106,40 @@ const taskSlice = createSlice({
       .addCase(deleteTask.rejected, (state, action) => {
         state.delete.loading = false;
         state.delete.error = action.payload as string;
+      })
+      .addCase(updateTaskColumn.pending, (state) => {
+        state.update.loading = true;
+        state.update.error = null;
+      })
+      .addCase(updateTaskColumn.fulfilled, (state, action) => {
+        state.update.loading = false;
+        state.update.error = null;
+
+        taskAdapter.updateOne(state, {
+          id: action.payload.taskId,
+          changes: { columnId: action.payload.newColumnId },
+        });
+      })
+      .addCase(updateTaskColumn.rejected, (state, action) => {
+        state.update.loading = false;
+        state.update.error = action.payload as string;
+      })
+      .addCase(reorderTaskInColumn.pending, (state) => {
+        state.update.loading = true;
+        state.update.error = null;
+      })
+      .addCase(reorderTaskInColumn.fulfilled, (state, action) => {
+        state.update.loading = false;
+        state.update.error = null;
+
+        taskAdapter.updateOne(state, {
+          id: action.payload.taskId,
+          changes: { order: action.payload.newIndex },
+        });
+      })
+      .addCase(reorderTaskInColumn.rejected, (state, action) => {
+        state.update.loading = false;
+        state.update.error = action.payload as string;
       });
   },
 });
@@ -117,5 +158,5 @@ export const selectTasksByColumnId = createSelector(
   },
 );
 
-export { createTask, fetchTask, updateTask, deleteTask };
+export { createTask, fetchTask, updateTask, deleteTask, updateTaskColumn };
 export default taskSlice.reducer;

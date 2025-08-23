@@ -96,3 +96,48 @@ export const fetchTask = createAsyncThunk<
     return rejectWithValue(firebaseError.message);
   }
 });
+
+export const updateTaskColumn = createAsyncThunk(
+  "task/updateTaskColumn",
+  async (
+    {
+      taskId,
+      newColumnId,
+      newIndex,
+    }: { taskId: string; newColumnId: string; newIndex: number },
+    { rejectWithValue },
+  ) => {
+    try {
+      const taskRef = doc(db, "tasks", taskId);
+      await updateDoc(taskRef, {
+        columnId: newColumnId,
+        order: newIndex,
+      });
+
+      return { taskId, newColumnId };
+    } catch (err) {
+      const firebaseError = err as FirebaseError;
+      return rejectWithValue(firebaseError.message);
+    }
+  },
+);
+
+export const reorderTaskInColumn = createAsyncThunk(
+  "task/reorderTaskInColumn",
+  async (
+    { taskId, newIndex }: { taskId: string; newIndex: number },
+    { rejectWithValue },
+  ) => {
+    try {
+      const taskRef = doc(db, "tasks", taskId);
+      await updateDoc(taskRef, {
+        order: newIndex,
+      });
+
+      return { taskId, newIndex };
+    } catch (err) {
+      const firebaseError = err as FirebaseError;
+      return rejectWithValue(firebaseError.message);
+    }
+  },
+);

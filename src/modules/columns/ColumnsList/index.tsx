@@ -3,8 +3,13 @@ import { Box, Typography, CircularProgress, Alert } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
 import { fetchTask } from "@src/store/tasks/taskSlice";
+import {
+  updateTaskColumn,
+  reorderTaskInColumn,
+} from "@src/store/tasks/taskThunks";
 import { useTranslation } from "react-i18next";
 import ColumnCard from "./ColumnCard";
+import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 
 export interface ColumnsListProps {
   userId: string;
@@ -50,34 +55,66 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
     );
   }
 
+  const onDragEnd = (result: DropResult<string>) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    if (source.droppableId === destination.droppableId) {
+      dispatch(
+        reorderTaskInColumn({
+          taskId: draggableId,
+          newIndex: destination.index,
+        }),
+      );
+    } else {
+      dispatch(
+        updateTaskColumn({
+          taskId: draggableId,
+          newColumnId: destination.droppableId,
+          newIndex: destination.index,
+        }),
+      );
+    }
+  };
+
   return (
-    <Box>
-      <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-        {t("columns:myColumnsTitle")}
-      </Typography>
-      {columns.length > 0 ? (
-        <Box
-          sx={{
-            display: "flex",
-            gap: 3,
-            p: 3,
-            overflowX: "auto",
-            alignItems: "flex-start",
-          }}
-        >
-          {columns.map((column) => (
-            <ColumnCard
-              key={column.id}
-              columnId={column.id}
-              columnName={column.name}
-              userId={userId}
-            />
-          ))}
-        </Box>
-      ) : (
-        <Typography>{t("columns:noColumnsYet")}</Typography>
-      )}
-    </Box>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Box>
+        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+          {t("columns:myColumnsTitle")}
+        </Typography>
+        {columns.length > 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 3,
+              p: 3,
+              overflowX: "auto",
+              alignItems: "flex-start",
+            }}
+          >
+            {columns.map((column) => (
+              <ColumnCard
+                key={column.id}
+                columnId={column.id}
+                columnName={column.name}
+                userId={userId}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Typography>{t("columns:noColumnsYet")}</Typography>
+        )}
+      </Box>
+    </DragDropContext>
   );
 };
 
