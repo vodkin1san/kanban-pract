@@ -1,5 +1,6 @@
 {
   "createTaskTitle": "Create New Task",
+  "editTastTitle": "Edit Task",
   "addCard": "Add card",
   "taskTitleLabel": "Task Title",
   "taskDescriptionLabel": "Description",
@@ -7,6 +8,7 @@
   "taskOrderLabel": "Order",
   "taskColumnLabel": "Attach to Column",
   "createTaskButton": "Create Task",
+  "editTaskButton": "Edit",
   "loadingTasks": "Loading tasks...",
   "noTasksYet": "No tasks created yet.",
   "validation": {

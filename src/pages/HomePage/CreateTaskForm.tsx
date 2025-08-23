@@ -10,7 +10,11 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { createTask } from "@src/store/tasks/taskSlice";
+import {
+  createTask,
+  selectTaskById,
+  updateTask,
+} from "@src/store/tasks/taskSlice";
 import createTaskSchema from "@schemas/CreateTaskSchema";
 import type { CreateTaskFormInputs } from "@schemas/CreateTaskSchema";
 
@@ -19,6 +23,7 @@ export interface CreateTaskFormProps {
   columnId: string;
   onSuccess: () => void;
   onCancel: () => void;
+  taskId?: string;
 }
 
 const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
@@ -26,12 +31,16 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   columnId,
   onSuccess,
   onCancel,
+  taskId,
 }: CreateTaskFormProps) => {
   const { t } = useTranslation(["common", "tasks"]);
   const dispatch = useAppDispatch();
   const {
     create: { loading: isCreatingTask, error: error },
   } = useAppSelector((state) => state.tasks);
+  const taskToEdit = useAppSelector((state) =>
+    taskId ? selectTaskById(state, taskId) : undefined,
+  );
 
   const {
     handleSubmit,
@@ -40,27 +49,48 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   } = useForm<CreateTaskFormInputs>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
-      title: "",
-      description: null,
-      dueDate: null,
-      order: 0,
+      title: taskToEdit?.title || "",
+      description: taskToEdit?.description || null,
+      dueDate: taskToEdit?.dueDate || null,
+      order: taskToEdit?.order || 0,
     },
   });
 
   const onSubmit = async (data: CreateTaskFormInputs) => {
-    const resultAction = await dispatch(
-      createTask({
-        userId,
-        columnId,
-        title: data.title,
-        description: data.description,
-        dueDate: data.dueDate,
-        order: data.order,
-      }),
-    );
-    if (createTask.fulfilled.match(resultAction)) {
+    let resultAction;
+    if (taskId) {
+      resultAction = await dispatch(
+        updateTask({
+          id: taskId,
+          changes: {
+            title: data.title,
+            description: data.description,
+            dueDate: data.dueDate,
+            order: data.order,
+          },
+        }),
+      );
+    } else {
+      resultAction = await dispatch(
+        createTask({
+          userId,
+          columnId,
+          title: data.title,
+          description: data.description,
+          dueDate: data.dueDate,
+          order: data.order,
+        }),
+      );
+    }
+    if (
+      updateTask.fulfilled.match(resultAction) ||
+      createTask.fulfilled.match(resultAction)
+    ) {
       onSuccess();
-    } else if (createTask.rejected.match(resultAction)) {
+    } else if (
+      updateTask.rejected.match(resultAction) ||
+      createTask.rejected.match(resultAction)
+    ) {
       console.error(
         "tasks:createTaskFailed",
         resultAction.payload || resultAction.error.message,
@@ -71,7 +101,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-        {t("tasks:createTaskTitle")}
+        {taskId ? t("tasks:editTastTitle") : t("tasks:createTaskTitle")}
       </Typography>
       <Box
         noValidate
@@ -170,6 +200,8 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
         >
           {isCreatingTask ? (
             <CircularProgress size={24} />
+          ) : taskId ? (
+            t("tasks:editTaskButton")
           ) : (
             t("tasks:createTaskButton")
           )}

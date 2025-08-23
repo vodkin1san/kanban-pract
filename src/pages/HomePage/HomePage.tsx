@@ -30,17 +30,7 @@ const HomePage = () => {
   };
 
   return (
-    <div>
-      <h1>{t(`mainPageTitle`)}</h1>
-      <p>{t(`mainPageDescription`)}</p>
-      <p>
-        {t(`auth:navToLogin`)}
-        <Link to={AppRoutes.LOGIN}>{t(`auth:login`)}</Link>
-      </p>
-      <p>
-        {t(`auth:navToSignUp`)}
-        <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
-      </p>
+    <>
       {authError && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {authError}
@@ -68,7 +58,16 @@ const HomePage = () => {
           {t("auth:notAuthorized")}
         </Alert>
       )}
-    </div>
+
+      <p>
+        {t(`auth:navToLogin`)}
+        <Link to={AppRoutes.LOGIN}>{t(`auth:login`)}</Link>
+      </p>
+      <p>
+        {t(`auth:navToSignUp`)}
+        <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
+      </p>
+    </>
   );
 };
 
