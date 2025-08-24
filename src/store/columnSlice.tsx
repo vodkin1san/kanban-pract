@@ -9,7 +9,7 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
 import type { RootState } from "@store/index";
 
-interface Column {
+export interface Column {
   id: string;
   name: string;
   userId: string;
