@@ -79,7 +79,7 @@ const CreateColumnForm = ({
       <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
         {columnToEdit
           ? t("columns:editColumnTitle")
-          : t("columns:createColumnTitle")}
+          : t("columns:columnFormTitle")}
       </Typography>
       <Box
         noValidate

@@ -79,7 +79,7 @@ function App() {
               color="error"
               sx={{ ml: 2 }}
             >
-              {t("common:logout")}
+              {t("auth:logout")}
             </Button>
           )}
         </Toolbar>

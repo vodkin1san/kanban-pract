@@ -2,9 +2,20 @@
   "columnFormTitle": "Создать новую колонку",
   "columnNameLabel": "Название колонки",
   "createColumnButton": "Создать колонку",
+  "editColumnTitle": "Редактировать колонку",
+  "updateColumnButton": "Сохронить изменения",
   "loadingColumns": "Загрузка колонок...",
   "myColumnsTitle": "Мои Колонки:",
   "noColumnsYet": "У вас пока нет колонок. Создайте новую!",
-
-  "validation.columnNameRequired": "Название колонки не может быть пустым"
+  "columns": "Колонки",
+  "myBoardTitle": "Моя Kanban-доска",
+  "searchPlaceholder": "Поиск колонок...",
+  "createdAt": "Создано",
+  "taskCount": "Количество задач",
+  "noColumnsFound": "Колонок не найдено.",
+  "confirmDeleteTitle": "Подтверждение удаления",
+  "confirmDeleteText": "Вы уверены, что хотите удалить эту колонку?",
+  "validation": {
+    "columnNameRequired": "Название колонки не может быть пустым"
+  }
 }

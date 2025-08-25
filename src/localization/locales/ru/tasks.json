@@ -11,6 +11,15 @@
   "editTaskButton": "Редактировать",
   "loadingTasks": "Загрузка задач...",
   "noTasksYet": "Задачи пока не созданы.",
+  "tasks": "Задачи",
+  "myTasksTitle": "Мои Задачи",
+  "searchPlaceholder": "Поиск задач...",
+  "title": "Название",
+  "description": "Описание",
+  "dueDate": "Дата выполнения",
+  "column": "Колонка",
+  "confirmDeleteTitle": "Подтверждение удаления",
+  "confirmDeleteText": "Вы уверены, что хотите удалить эту задачу?",
   "validation": {
     "titleRequired": "Название задачи обязательно.",
     "orderMinZero": "Порядок должен быть 0 или больше."

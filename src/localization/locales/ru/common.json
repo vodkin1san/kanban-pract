@@ -7,8 +7,10 @@
   "error": "Ошибка:",
   "mainPageTitle": "Главная страница",
   "mainPageDescription": "Это форма главной страницы. (Будет реализовано)",
-  "appName": "Моя Канбан Доска",
+  "appName": "Моя Kanban Доска",
   "language": "Язык",
   "languageEnglish": "Английский",
-  "languageRussian": "Русский"
+  "languageRussian": "Русский",
+  "home": "Главная",
+  "delete": "Удалить"
 }

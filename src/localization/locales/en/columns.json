@@ -2,10 +2,19 @@
   "columnFormTitle": "Create New Column",
   "columnNameLabel": "Column Name",
   "createColumnButton": "Create Column",
+  "editColumnTitle": "Edit Column Title",
+  "updateColumnButton": "Update Column",
   "loadingColumns": "Loading columns...",
   "myColumnsTitle": "My Columns:",
   "noColumnsYet": "You don't have any columns yet. Create a new one!",
-
+  "columns": "Columns",
+  "myBoardTitle": "My Kanban Board",
+  "searchPlaceholder": "Search columns...",
+  "createdAt": "Created At",
+  "taskCount": "Task Count",
+  "noColumnsFound": "No columns found.",
+  "confirmDeleteTitle": "Confirm Deletion",
+  "confirmDeleteText": "Are you sure you want to delete this column?",
   "validation": {
     "columnNameRequired": "Column name cannot be empty"
   }

@@ -10,5 +10,7 @@
   "appName": "My Kanban Board",
   "language": "Language",
   "languageEnglish": "English",
-  "languageRussian": "Russian"
+  "languageRussian": "Russian",
+  "home": "Home",
+  "delete": "Delete"
 }

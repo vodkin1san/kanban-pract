@@ -109,7 +109,7 @@ function ColumnsPage() {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        {t("columns:myColumns")}
+        {t("columns:myColumnsTitle")}
       </Typography>
       <Box sx={{ mb: 2 }}>
         <Button variant="contained" onClick={handleCreateColumn}>
