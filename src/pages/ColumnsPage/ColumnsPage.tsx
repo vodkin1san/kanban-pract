@@ -1,3 +1,4 @@
+// src/pages/ColumnsPage/ColumnsPage.tsx
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import {
@@ -10,16 +11,30 @@ import {
   deleteColumn,
   selectColumnById,
 } from "@store/columnSlice";
+import { fetchTask, selectAllTasks } from "@src/store/tasks/taskSlice";
 import { selectUserId } from "@store/selectors";
-import { Box, Typography, Button, Dialog } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import { ColumnsTable } from "./ColumnsTable";
 import { useTranslation } from "react-i18next";
 import { CreateColumnForm } from "@pages/HomePage/CreateColumnForm";
+import type { RootState } from "@store/index";
 
 function ColumnsPage() {
   const dispatch = useAppDispatch();
   const columns = useAppSelector(selectAllColumns);
+  const allTasks = useAppSelector(selectAllTasks);
   const userId = useAppSelector(selectUserId);
+  const isFetchingColumns = useAppSelector(
+    (state) => state.column.isFetchingColumns,
+  );
+  const error = useAppSelector((state) => state.column.error);
   const { t } = useTranslation(["common", "columns"]);
 
   const isEditModalOpen = useAppSelector(
@@ -31,15 +46,20 @@ function ColumnsPage() {
   const selectedColumnId = useAppSelector(
     (state) => state.column.selectedColumnId,
   );
-  const selectedColumn = useAppSelector((state) =>
+  const selectedColumn = useAppSelector((state: RootState) =>
     selectColumnById(state, selectedColumnId || ""),
   );
 
   useEffect(() => {
     if (userId) {
       dispatch(fetchColumn(userId));
+      dispatch(fetchTask(userId)); // Added fetchTask to get tasks for the count
     }
   }, [dispatch, userId]);
+
+  const getTaskCount = (columnId: string) => {
+    return allTasks.filter((task) => task.columnId === columnId).length;
+  };
 
   const handleEdit = (columnId: string) => {
     dispatch(openEditModal(columnId));
@@ -60,6 +80,32 @@ function ColumnsPage() {
     dispatch(openEditModal(null));
   };
 
+  if (isFetchingColumns) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>{t("columns:loadingColumns")}</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">
+          {t("common:error")}: {error}
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -74,6 +120,7 @@ function ColumnsPage() {
         columns={columns}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        getTaskCount={getTaskCount}
       />
 
       <Dialog open={isEditModalOpen} onClose={() => dispatch(closeEditModal())}>

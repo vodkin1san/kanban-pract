@@ -1,9 +1,12 @@
-import { Box, AppBar, Toolbar, Typography } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
+import { Box, AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { onAuthStateChanged as firebaseAuthListener } from "firebase/auth";
+import {
+  onAuthStateChanged as firebaseAuthListener,
+  signOut,
+} from "firebase/auth";
 import { auth } from "@myFirebase/config.ts";
-import { useAppDispatch } from "@store/hooks";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { setUser, clearUser } from "@store/userProfileSlice";
 import { setAuthChecked } from "@store/authSlice";
 import { ColumnsPage } from "@src/pages/ColumnsPage/ColumnsPage";
@@ -15,10 +18,13 @@ import { PrivateRoute } from "@components/PrivateRoute";
 import AppRoutes from "@enums/routes";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@components/LanguageSwitcher";
+import { selectUserId } from "@store/selectors";
 
 function App() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const userId = useAppSelector(selectUserId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = firebaseAuthListener(auth, (user) => {
@@ -27,21 +33,55 @@ function App() {
       } else {
         dispatch(clearUser());
       }
-
       dispatch(setAuthChecked(true));
     });
-
     return () => unsubscribe();
   }, [dispatch]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate(AppRoutes.LOGIN);
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {t("appName")}
-          </Typography>
+          <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+            <Typography
+              variant="h6"
+              component={Link}
+              to={AppRoutes.HOME}
+              sx={{ textDecoration: "none", color: "inherit", mr: 4 }}
+            >
+              {t("appName")}
+            </Typography>
+            {userId && (
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button component={Link} to={AppRoutes.COLUMNS} color="inherit">
+                  {t("columns:columns")}
+                </Button>
+                <Button component={Link} to={AppRoutes.TASKS} color="inherit">
+                  {t("tasks:tasks")}
+                </Button>
+              </Box>
+            )}
+          </Box>
           <LanguageSwitcher sx={{ ml: 1 }} />
+          {userId && (
+            <Button
+              onClick={handleLogout}
+              variant="contained"
+              color="error"
+              sx={{ ml: 2 }}
+            >
+              {t("common:logout")}
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <Routes>

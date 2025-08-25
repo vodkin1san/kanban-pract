@@ -1,4 +1,3 @@
-// src/components/TasksTable.tsx
 import {
   Box,
   Typography,
