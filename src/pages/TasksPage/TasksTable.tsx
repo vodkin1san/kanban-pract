@@ -83,13 +83,7 @@ const TasksTable: FC<TasksTableProps> = ({
                       }}
                     >
                       {userId && task.columnId && (
-                        <ModalWrapper
-                          openButtonText={
-                            <IconButton>
-                              <EditIcon />
-                            </IconButton>
-                          }
-                        >
+                        <ModalWrapper openButtonIcon={<EditIcon />}>
                           {(onClose) => (
                             <CreateTaskForm
                               onCancel={onClose}

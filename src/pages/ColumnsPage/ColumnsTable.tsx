@@ -1,4 +1,3 @@
-// src/pages/ColumnsPage/ColumnsTable.tsx
 import {
   Box,
   TableContainer,

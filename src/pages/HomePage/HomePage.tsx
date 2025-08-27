@@ -1,4 +1,4 @@
-import { Box, Typography, Alert, Button } from "@mui/material";
+import { Box, Typography, Alert } from "@mui/material";
 import { useAppSelector } from "@store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "@modules/columns/ColumnsList/index";
@@ -25,13 +25,7 @@ const HomePage = () => {
             <Typography variant="h4" component="h1" gutterBottom>
               {t("columns:myBoardTitle")}
             </Typography>
-            <ModalWrapper
-              openButtonText={
-                <Button variant="contained" color="primary">
-                  {t("columns:createColumnButton")}
-                </Button>
-              }
-            >
+            <ModalWrapper openButtonText={t("columns:createColumnButton")}>
               {(onClose) => (
                 <CreateColumnForm
                   onCancel={onClose}

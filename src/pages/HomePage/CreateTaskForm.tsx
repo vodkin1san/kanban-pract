@@ -169,6 +169,11 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
                   : undefined
               }
               disabled={isCreatingTask}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
             />
           )}
         />

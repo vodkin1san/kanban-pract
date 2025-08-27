@@ -1,4 +1,3 @@
-// src/pages/ColumnsPage/ColumnsPage.tsx
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import {
@@ -53,7 +52,7 @@ function ColumnsPage() {
   useEffect(() => {
     if (userId) {
       dispatch(fetchColumn(userId));
-      dispatch(fetchTask(userId)); // Added fetchTask to get tasks for the count
+      dispatch(fetchTask(userId));
     }
   }, [dispatch, userId]);
 
