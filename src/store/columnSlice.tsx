@@ -5,7 +5,16 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import { db } from "@myFirebase/config";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { getFirebaseErrorMessage } from "@utils/firebaseErrors";
 import type { RootState } from "@store/index";
 
@@ -16,6 +25,11 @@ export interface Column {
   createAt: string;
 }
 
+export interface UpdateColumnPayload {
+  id: string;
+  changes: Partial<Column>;
+}
+
 const columnsAdapter = createEntityAdapter<Column>();
 
 interface ColumnState
@@ -23,16 +37,22 @@ interface ColumnState
   isCreatingColumn: boolean;
   isFetchingColumns: boolean;
   error: string | null;
+  isEditModalOpen: boolean;
+  isDeleteModalOpen: boolean;
+  selectedColumnId: string | null;
 }
 
 const initialState: ColumnState = columnsAdapter.getInitialState({
   isCreatingColumn: false,
   isFetchingColumns: false,
   error: null,
+  isEditModalOpen: false,
+  isDeleteModalOpen: false,
+  selectedColumnId: null,
 });
 
 const createColumn = createAsyncThunk(
-  "columns/createColumn",
+  "column/createColumn",
   async (
     { name, userId }: { name: string; userId: string },
     { rejectWithValue },
@@ -57,7 +77,7 @@ const createColumn = createAsyncThunk(
 );
 
 const fetchColumn = createAsyncThunk(
-  "columns/fetchColumns",
+  "column/fetchColumns",
   async (userId: string, { rejectWithValue }) => {
     try {
       const columnCollectionRef = collection(db, "columns");
@@ -80,10 +100,57 @@ const fetchColumn = createAsyncThunk(
   },
 );
 
+const deleteColumn = createAsyncThunk(
+  "column/deleteColumn",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await deleteDoc(doc(db, "columns", id));
+
+      return id;
+    } catch (error) {
+      const errorMessage = getFirebaseErrorMessage(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+const updateColumn = createAsyncThunk(
+  "column/updateColumn",
+  async ({ id, changes }: UpdateColumnPayload, { rejectWithValue }) => {
+    try {
+      await updateDoc(doc(db, "columns", id), changes);
+      return {
+        id,
+        changes,
+      };
+    } catch (error) {
+      const errorMessage = getFirebaseErrorMessage(error);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
 const columnSlice = createSlice({
   name: "column",
   initialState,
-  reducers: {},
+  reducers: {
+    openEditModal: (state, action: PayloadAction<string | null>) => {
+      state.isEditModalOpen = true;
+      state.selectedColumnId = action.payload;
+    },
+    closeEditModal: (state) => {
+      state.isEditModalOpen = false;
+      state.selectedColumnId = null;
+    },
+    openDeleteModal: (state, action: PayloadAction<string>) => {
+      state.isDeleteModalOpen = true;
+      state.selectedColumnId = action.payload;
+    },
+    closeDeleteModal: (state) => {
+      state.isDeleteModalOpen = false;
+      state.selectedColumnId = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createColumn.pending, (state) => {
@@ -118,6 +185,38 @@ const columnSlice = createSlice({
         state.isFetchingColumns = false;
         state.error = action.payload as string;
         columnsAdapter.removeAll(state);
+      })
+      .addCase(deleteColumn.pending, (state) => {
+        state.isFetchingColumns = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteColumn.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.isFetchingColumns = false;
+          state.error = null;
+          columnsAdapter.removeOne(state, action.payload);
+        },
+      )
+      .addCase(deleteColumn.rejected, (state, action) => {
+        state.isFetchingColumns = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateColumn.pending, (state) => {
+        state.isFetchingColumns = true;
+        state.error = null;
+      })
+      .addCase(
+        updateColumn.fulfilled,
+        (state, action: PayloadAction<UpdateColumnPayload>) => {
+          state.isFetchingColumns = false;
+          state.error = null;
+          columnsAdapter.updateOne(state, action.payload);
+        },
+      )
+      .addCase(updateColumn.rejected, (state, action) => {
+        state.isFetchingColumns = false;
+        state.error = action.payload as string;
       });
   },
 });
@@ -128,5 +227,12 @@ export const {
   selectIds: selectColumnIds,
 } = columnsAdapter.getSelectors((state: RootState) => state.column);
 
-export { createColumn, fetchColumn };
+export const {
+  openEditModal,
+  closeEditModal,
+  openDeleteModal,
+  closeDeleteModal,
+} = columnSlice.actions;
+
+export { createColumn, fetchColumn, deleteColumn, updateColumn };
 export default columnSlice.reducer;

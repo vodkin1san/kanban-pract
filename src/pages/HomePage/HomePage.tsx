@@ -1,36 +1,18 @@
-import { useNavigate, Link } from "react-router-dom";
-import AppRoutes from "@enums/routes";
-import { Button, Alert } from "@mui/material";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { Box, Typography, Alert } from "@mui/material";
+import { useAppSelector } from "@store/hooks";
 import { CreateColumnForm } from "./CreateColumnForm";
 import { ColumnsList } from "@modules/columns/ColumnsList/index";
-import { logoutUser } from "@store/authSlice";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
 import { useTranslation } from "react-i18next";
 import { selectUserId, selectAuthError } from "@store/selectors";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const userId = useAppSelector(selectUserId);
   const authError = useAppSelector(selectAuthError);
   const { t } = useTranslation(["common", "auth", "columns"]);
 
-  const handleLogout = async () => {
-    const resultAction = await dispatch(logoutUser());
-
-    if (logoutUser.fulfilled.match(resultAction)) {
-      navigate(AppRoutes.LOGIN);
-    } else if (logoutUser.rejected.match(resultAction)) {
-      console.error(
-        `Logout failed:`,
-        resultAction.payload || resultAction.error.message,
-      );
-    }
-  };
-
   return (
-    <>
+    <Box sx={{ p: 3, minHeight: "100vh" }}>
       {authError && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {authError}
@@ -39,35 +21,28 @@ const HomePage = () => {
 
       {userId ? (
         <>
-          <ModalWrapper openButtonText={t("columns:createColumnButton")}>
-            {(onClose) => (
-              <CreateColumnForm
-                onCancel={onClose}
-                onSuccess={onClose}
-                userId={userId}
-              />
-            )}
-          </ModalWrapper>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              {t("columns:myBoardTitle")}
+            </Typography>
+            <ModalWrapper openButtonText={t("columns:createColumnButton")}>
+              {(onClose) => (
+                <CreateColumnForm
+                  onCancel={onClose}
+                  onSuccess={onClose}
+                  userId={userId}
+                />
+              )}
+            </ModalWrapper>
+          </Box>
           <ColumnsList userId={userId} />
-          <Button sx={{ mr: 3 }} onClick={handleLogout}>
-            {t("auth:logout")}
-          </Button>
         </>
       ) : (
         <Alert severity="warning" sx={{ mt: 2 }}>
           {t("auth:notAuthorized")}
         </Alert>
       )}
-
-      <p>
-        {t(`auth:navToLogin`)}
-        <Link to={AppRoutes.LOGIN}>{t(`auth:login`)}</Link>
-      </p>
-      <p>
-        {t(`auth:navToSignUp`)}
-        <Link to={AppRoutes.SIGNUP}>{t(`auth:signup`)}</Link>
-      </p>
-    </>
+    </Box>
   );
 };
 

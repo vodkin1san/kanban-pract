@@ -11,6 +11,15 @@
   "editTaskButton": "Edit",
   "loadingTasks": "Loading tasks...",
   "noTasksYet": "No tasks created yet.",
+  "tasks": "Tasks",
+  "myTasksTitle": "My Tasks",
+  "searchPlaceholder": "Search tasks...",
+  "title": "Title",
+  "description": "Description",
+  "dueDate": "Due Date",
+  "column": "Column",
+  "confirmDeleteTitle": "Confirm Deletion",
+  "confirmDeleteText": "Are you sure you want to delete this task?",
   "validation": {
     "titleRequired": "Task title is required.",
     "orderMinZero": "Order must be 0 or greater."
