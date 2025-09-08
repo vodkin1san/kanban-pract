@@ -46,14 +46,12 @@ const TasksTable: FC<TasksTableProps> = ({
 
   const getColumnName = (columnId: string) => {
     const column = columns.find((col) => col.id === columnId);
-    return column ? column.name : "Без колонки";
+    return column ? column.name : t("tasks:noColumn");
   };
 
-  // ✅ Функция для форматирования даты
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    // Простая проверка, чтобы убедиться, что дата валидна
     if (isNaN(date.getTime())) {
       return "Некорректная дата";
     }
@@ -86,13 +84,11 @@ const TasksTable: FC<TasksTableProps> = ({
                 >
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{task.description}</TableCell>
-                  {/* ✅ Используем новую функцию formatDate */}
                   <TableCell>{formatDate(task.dueDate)}</TableCell>
-                  {/* ✅ Проверяем task.columnId перед вызовом getColumnName */}
                   <TableCell>
                     {task.columnId
                       ? getColumnName(task.columnId)
-                      : "Без колонки"}
+                      : t("tasks:noColumn")}
                   </TableCell>
                   <TableCell>
                     <Box

@@ -2,6 +2,7 @@
   "createTaskTitle": "Create New Task",
   "editTastTitle": "Edit Task",
   "addCard": "Add card",
+  "columnLabel": "Task Column Label",
   "taskTitleLabel": "Task Title",
   "taskDescriptionLabel": "Description",
   "taskDueDateLabel": "Due Date",
@@ -18,6 +19,10 @@
   "description": "Description",
   "dueDate": "Due Date",
   "column": "Column",
+  "noColumn": "No column",
+  "addTasksLabel": "Add tasks",
+  "addTasksPlaceholder": "Select tasks",
+  "noUnassignedTasks": "No tasks",
   "confirmDeleteTitle": "Confirm Deletion",
   "confirmDeleteText": "Are you sure you want to delete this task?",
   "validation": {
