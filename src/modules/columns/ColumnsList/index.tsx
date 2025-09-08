@@ -10,9 +10,11 @@ import {
 import { useTranslation } from "react-i18next";
 import ColumnCard from "./ColumnCard";
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { type Column } from "@store/columnSlice";
 
 export interface ColumnsListProps {
   userId: string;
+  columns: Column[];
 }
 
 const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
@@ -107,6 +109,7 @@ const ColumnsList: React.FC<ColumnsListProps> = ({ userId }) => {
                 columnId={column.id}
                 columnName={column.name}
                 userId={userId}
+                columns={columns}
               />
             ))}
           </Box>

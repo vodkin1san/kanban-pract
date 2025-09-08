@@ -7,6 +7,10 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
@@ -17,13 +21,15 @@ import {
 } from "@src/store/tasks/taskSlice";
 import createTaskSchema from "@schemas/CreateTaskSchema";
 import type { CreateTaskFormInputs } from "@schemas/CreateTaskSchema";
+import type { Column } from "@src/store/columnSlice";
 
 export interface CreateTaskFormProps {
   userId: string;
-  columnId: string;
+  columnId: string | null;
   onSuccess: () => void;
   onCancel: () => void;
   taskId?: string;
+  columns?: Column[];
 }
 
 const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
@@ -32,6 +38,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   onSuccess,
   onCancel,
   taskId,
+  columns,
 }: CreateTaskFormProps) => {
   const { t } = useTranslation(["common", "tasks"]);
   const dispatch = useAppDispatch();
@@ -53,6 +60,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
       description: taskToEdit?.description || null,
       dueDate: taskToEdit?.dueDate || null,
       order: taskToEdit?.order || 0,
+      columnId: taskId ? taskToEdit?.columnId || null : columnId || null,
     },
   });
 
@@ -67,6 +75,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
             description: data.description,
             dueDate: data.dueDate,
             order: data.order,
+            columnId: data.columnId,
           },
         }),
       );
@@ -74,7 +83,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
       resultAction = await dispatch(
         createTask({
           userId,
-          columnId,
+          columnId: data.columnId,
           title: data.title,
           description: data.description,
           dueDate: data.dueDate,
@@ -114,6 +123,35 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
             {t("common:error")}: {error}
           </Alert>
         )}
+        <Controller
+          name="columnId"
+          control={control}
+          render={({ field }) => (
+            <FormControl fullWidth error={!!errors.columnId}>
+              <InputLabel>{t("tasks:columnLabel")}</InputLabel>
+              <Select
+                {...field}
+                label={t("tasks:columnLabel")}
+                disabled={isCreatingTask || !columns?.length}
+                value={field.value || ""}
+              >
+                <MenuItem value="">
+                  <em>{t("tasks:noColumn")}</em>
+                </MenuItem>
+                {columns?.map((column) => (
+                  <MenuItem key={column.id} value={column.id}>
+                    {column.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.columnId && (
+                <Typography color="error" variant="caption">
+                  {t(`tasks:validation.${errors.columnId.message}`)}
+                </Typography>
+              )}
+            </FormControl>
+          )}
+        />
         <Controller
           name="title"
           control={control}

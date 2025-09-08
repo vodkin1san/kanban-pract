@@ -5,6 +5,7 @@ const createTaskSchema = z.object({
   description: z.string().nullable(),
   dueDate: z.string().nullable(),
   order: z.number().int().min(0, { message: "orderMinZero" }),
+  columnId: z.string().trim().nullable(),
 });
 
 export type CreateTaskFormInputs = z.infer<typeof createTaskSchema>;

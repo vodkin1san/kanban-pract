@@ -5,10 +5,12 @@ import { ColumnsList } from "@modules/columns/ColumnsList/index";
 import { ModalWrapper } from "@modules/columns/ModalWrapper/index";
 import { useTranslation } from "react-i18next";
 import { selectUserId, selectAuthError } from "@store/selectors";
+import { selectAllColumns } from "@store/columnSlice";
 
 const HomePage = () => {
   const userId = useAppSelector(selectUserId);
   const authError = useAppSelector(selectAuthError);
+  const columns = useAppSelector(selectAllColumns);
   const { t } = useTranslation(["common", "auth", "columns"]);
 
   return (
@@ -35,7 +37,7 @@ const HomePage = () => {
               )}
             </ModalWrapper>
           </Box>
-          <ColumnsList userId={userId} />
+          <ColumnsList userId={userId} columns={columns} />
         </>
       ) : (
         <Alert severity="warning" sx={{ mt: 2 }}>

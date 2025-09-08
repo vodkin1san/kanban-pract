@@ -15,11 +15,13 @@ import { deleteTask, selectTasksByColumnId } from "@src/store/tasks/taskSlice";
 import { type RootState } from "@store/index";
 import { type Task } from "@src/store/tasks/taskTypes";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
+import { type Column } from "@store/columnSlice";
 
 export interface ColumnCardProps {
   columnId: string;
   userId: string;
   columnName: string;
+  columns: Column[];
 }
 
 const columnCardStyles: SxProps<Theme> = {
@@ -48,6 +50,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
   columnId,
   userId,
   columnName,
+  columns,
 }: ColumnCardProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation(["columns", "common", "tasks"]);
@@ -98,6 +101,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
                               userId={userId}
                               columnId={columnId}
                               taskId={task.id}
+                              columns={columns}
                             />
                           )}
                         </ModalWrapper>
@@ -125,6 +129,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
                 onSuccess={onClose}
                 userId={userId}
                 columnId={columnId}
+                columns={columns}
               />
             )}
           </ModalWrapper>
