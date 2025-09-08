@@ -11,9 +11,6 @@ import {
   IconButton,
   Dialog,
   Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import BackspaceIcon from "@mui/icons-material/Backspace";
@@ -117,16 +114,20 @@ const TasksTable: FC<TasksTableProps> = ({
       </TableContainer>
 
       <Dialog open={isDeleteModalOpen} onClose={onCloseDeleteModal}>
-        <DialogTitle>{t("tasks:confirmDeleteTitle")}</DialogTitle>
-        <DialogContent>
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h6">{t("tasks:confirmDeleteTitle")}</Typography>
           <Typography>{t("tasks:confirmDeleteText")}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onCloseDeleteModal}>{t("common:cancel")}</Button>
-          <Button onClick={onConfirmDelete} color="error">
-            {t("common:delete")}
-          </Button>
-        </DialogActions>
+          <Box
+            sx={{ mt: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}
+          >
+            <Button onClick={onCloseDeleteModal} variant="outlined">
+              {t("common:cancel")}
+            </Button>
+            <Button onClick={onConfirmDelete} variant="contained" color="error">
+              {t("common:delete")}
+            </Button>
+          </Box>
+        </Box>
       </Dialog>
     </>
   );

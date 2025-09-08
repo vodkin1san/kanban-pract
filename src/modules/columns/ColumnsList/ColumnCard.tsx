@@ -30,7 +30,6 @@ const columnCardStyles: SxProps<Theme> = {
   p: 2,
   minWidth: 280,
   maxWidth: 320,
-  backgroundColor: "#f4f5f7",
   display: "flex",
   flexDirection: "column",
   gap: 1,
@@ -41,7 +40,6 @@ const taskItemStyles: SxProps<Theme> = {
   justifyContent: "space-between",
   p: 1,
   mb: 1,
-  backgroundColor: "#fff",
   borderRadius: 1,
   boxShadow: 1,
 };
@@ -60,11 +58,16 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
 
   return (
     <Droppable droppableId={columnId}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Box
           ref={provided.innerRef}
           {...provided.droppableProps}
-          sx={columnCardStyles}
+          sx={{
+            ...columnCardStyles,
+            backgroundColor: snapshot.isDraggingOver
+              ? "rgba(0, 0, 0, 0.1)"
+              : "#f4f5f7",
+          }}
         >
           <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
             {columnName}
@@ -73,12 +76,25 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
             {tasks.length > 0 ? (
               tasks.map((task: Task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <Box
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      sx={taskItemStyles}
+                      sx={{
+                        ...taskItemStyles,
+                        backgroundColor: snapshot.isDragging
+                          ? "rgba(255, 255, 255, 0.8)"
+                          : "#fff",
+                        boxShadow: snapshot.isDragging ? 3 : 1,
+                        transform: snapshot.isDragging
+                          ? "rotate(2deg)"
+                          : "none",
+                        border: snapshot.isDragging
+                          ? "2px solid #1976d2"
+                          : "none",
+                        cursor: snapshot.isDragging ? "grabbing" : "grab",
+                      }}
                     >
                       <Typography
                         style={{ display: "flex", alignItems: "center" }}
@@ -121,6 +137,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
                 {t("tasks:noTasksYet")}
               </Typography>
             )}
+            {provided.placeholder}
           </Box>
           <ModalWrapper openButtonText={t("tasks:addCard")}>
             {(onClose) => (

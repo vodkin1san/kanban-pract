@@ -49,6 +49,13 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
     taskId ? selectTaskById(state, taskId) : undefined,
   );
 
+  const getFormattedDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const {
     handleSubmit,
     control,
@@ -58,7 +65,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
     defaultValues: {
       title: taskToEdit?.title || "",
       description: taskToEdit?.description || null,
-      dueDate: taskToEdit?.dueDate || null,
+      dueDate: taskToEdit?.dueDate || getFormattedDate(new Date()),
       order: taskToEdit?.order || 0,
       columnId: taskId ? taskToEdit?.columnId || null : columnId || null,
     },
