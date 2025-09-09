@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import BackspaceIcon from "@mui/icons-material/Backspace";
-import { type FC, useState, type ChangeEvent } from "react";
+import { type FC, useState, type ChangeEvent, useEffect } from "react";
 import { type Column } from "@store/columnSlice";
 import { useTranslation } from "react-i18next";
 
@@ -34,11 +34,22 @@ const ColumnsTable: FC<ColumnsTableProps> = ({
   const { t } = useTranslation(["columns", "common"]);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTerm]);
+
   const filteredColumns = columns.filter((column) =>
-    column.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    column.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
   const paginatedColumns = filteredColumns.slice(

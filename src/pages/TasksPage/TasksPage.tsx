@@ -32,6 +32,7 @@ const TasksPage = () => {
   const { t } = useTranslation(["tasks", "common"]);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -43,6 +44,16 @@ const TasksPage = () => {
       dispatch(fetchColumn(userId));
     }
   }, [dispatch, userId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTerm]);
 
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
@@ -80,7 +91,7 @@ const TasksPage = () => {
   };
 
   const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(searchTerm.toLowerCase()),
+    task.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
   const currentTasks = filteredTasks.slice(
