@@ -30,6 +30,7 @@ export interface CreateTaskFormProps {
   onCancel: () => void;
   taskId?: string;
   columns?: Column[];
+  order?: number;
 }
 
 const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
@@ -39,6 +40,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   onCancel,
   taskId,
   columns,
+  order,
 }: CreateTaskFormProps) => {
   const { t } = useTranslation(["common", "tasks"]);
   const dispatch = useAppDispatch();
@@ -66,7 +68,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
       title: taskToEdit?.title || "",
       description: taskToEdit?.description || null,
       dueDate: taskToEdit?.dueDate || getFormattedDate(new Date()),
-      order: taskToEdit?.order || 0,
+      order: order || 0,
       columnId: taskId ? taskToEdit?.columnId || null : columnId || null,
     },
   });
@@ -81,7 +83,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
             title: data.title,
             description: data.description,
             dueDate: data.dueDate,
-            order: data.order,
+            order: taskToEdit?.order,
             columnId: data.columnId,
           },
         }),
@@ -219,27 +221,6 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
                   shrink: true,
                 },
               }}
-            />
-          )}
-        />
-        <Controller
-          name="order"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              label={t("tasks:taskOrderLabel")}
-              id="order"
-              type="number"
-              onChange={(e) => field.onChange(Number(e.target.value))}
-              error={!!errors.order}
-              helperText={
-                errors.order?.message
-                  ? t(`tasks:validation.${errors.order.message}`)
-                  : undefined
-              }
-              disabled={isCreatingTask}
             />
           )}
         />

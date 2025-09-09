@@ -56,6 +56,10 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
     selectTasksByColumnId(state, columnId),
   );
 
+  const sortedTasks = [...tasks].sort((a, b) => a.order - b.order);
+  const nextOrder =
+    sortedTasks.length > 0 ? sortedTasks[sortedTasks.length - 1].order + 1 : 0;
+
   return (
     <Droppable droppableId={columnId}>
       {(provided, snapshot) => (
@@ -118,6 +122,7 @@ const ColumnCard: React.FC<ColumnCardProps> = ({
                               columnId={columnId}
                               taskId={task.id}
                               columns={columns}
+                              order={nextOrder}
                             />
                           )}
                         </ModalWrapper>
