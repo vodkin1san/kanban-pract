@@ -1,12 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import {
   fetchColumn,
   selectAllColumns,
-  openEditModal,
-  closeEditModal,
-  openDeleteModal,
-  closeDeleteModal,
   deleteColumn,
   selectColumnById,
 } from "@store/columnSlice";
@@ -24,6 +20,7 @@ import { ColumnsTable } from "./ColumnsTable";
 import { useTranslation } from "react-i18next";
 import { CreateColumnForm } from "@pages/HomePage/CreateColumnForm";
 import type { RootState } from "@store/index";
+import { ModalWrapper } from "@modules/columns/ModalWrapper";
 
 function ColumnsPage() {
   const dispatch = useAppDispatch();
@@ -36,17 +33,12 @@ function ColumnsPage() {
   const error = useAppSelector((state) => state.column.error);
   const { t } = useTranslation(["common", "columns"]);
 
-  const isEditModalOpen = useAppSelector(
-    (state) => state.column.isEditModalOpen,
-  );
-  const isDeleteModalOpen = useAppSelector(
-    (state) => state.column.isDeleteModalOpen,
-  );
-  const selectedColumnId = useAppSelector(
-    (state) => state.column.selectedColumnId,
-  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
+
   const selectedColumn = useAppSelector((state: RootState) =>
-    selectColumnById(state, selectedColumnId || ""),
+    selectedColumnId ? selectColumnById(state, selectedColumnId) : undefined,
   );
 
   useEffect(() => {
@@ -61,22 +53,26 @@ function ColumnsPage() {
   };
 
   const handleEdit = (columnId: string) => {
-    dispatch(openEditModal(columnId));
+    setSelectedColumnId(columnId);
+    setIsEditModalOpen(true);
   };
 
   const handleDelete = (columnId: string) => {
-    dispatch(openDeleteModal(columnId));
+    setSelectedColumnId(columnId);
+    setIsDeleteModalOpen(true);
   };
 
   const onConfirmDelete = () => {
     if (selectedColumnId) {
       dispatch(deleteColumn(selectedColumnId));
-      dispatch(closeDeleteModal());
+      setIsDeleteModalOpen(false);
+      setSelectedColumnId(null);
     }
   };
 
-  const handleCreateColumn = () => {
-    dispatch(openEditModal(null));
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedColumnId(null);
   };
 
   if (isFetchingColumns) {
@@ -111,9 +107,15 @@ function ColumnsPage() {
         {t("columns:myColumnsTitle")}
       </Typography>
       <Box sx={{ mb: 2 }}>
-        <Button variant="contained" onClick={handleCreateColumn}>
-          {t("columns:createColumnButton")}
-        </Button>
+        <ModalWrapper openButtonText={t("columns:createColumnButton")}>
+          {(onClose) => (
+            <CreateColumnForm
+              onCancel={onClose}
+              onSuccess={onClose}
+              userId={userId || ""}
+            />
+          )}
+        </ModalWrapper>
       </Box>
       <ColumnsTable
         columns={columns}
@@ -122,18 +124,22 @@ function ColumnsPage() {
         getTaskCount={getTaskCount}
       />
 
-      <Dialog open={isEditModalOpen} onClose={() => dispatch(closeEditModal())}>
-        <CreateColumnForm
-          onCancel={() => dispatch(closeEditModal())}
-          onSuccess={() => dispatch(closeEditModal())}
-          userId={userId || ""}
-          columnToEdit={selectedColumn || undefined}
-        />
-      </Dialog>
+      {isEditModalOpen && selectedColumn && (
+        <ModalWrapper openInitially={true} onClose={handleCloseEditModal}>
+          {(onClose) => (
+            <CreateColumnForm
+              onCancel={onClose}
+              onSuccess={onClose}
+              userId={userId || ""}
+              columnToEdit={selectedColumn}
+            />
+          )}
+        </ModalWrapper>
+      )}
 
       <Dialog
         open={isDeleteModalOpen}
-        onClose={() => dispatch(closeDeleteModal())}
+        onClose={() => setIsDeleteModalOpen(false)}
       >
         <Box sx={{ p: 3 }}>
           <Typography variant="h6">
@@ -144,7 +150,7 @@ function ColumnsPage() {
             sx={{ mt: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}
           >
             <Button
-              onClick={() => dispatch(closeDeleteModal())}
+              onClick={() => setIsDeleteModalOpen(false)}
               variant="outlined"
             >
               {t("common:cancel")}

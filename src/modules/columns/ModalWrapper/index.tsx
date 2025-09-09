@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, Button, IconButton } from "@mui/material";
 
 export interface ModalWrapperProps {
   children: (onClose: () => void) => React.ReactNode;
   openButtonText?: string;
   openButtonIcon?: React.ReactNode;
+  openInitially?: boolean;
+  onClose?: () => void;
 }
 
 const ModalWrapper: React.FC<ModalWrapperProps> = ({
   children,
   openButtonText,
   openButtonIcon,
+  openInitially = false,
+  onClose,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(openInitially);
+
+  useEffect(() => {
+    setIsOpen(openInitially);
+  }, [openInitially]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const renderButton = () => {
     if (openButtonIcon) {
@@ -38,8 +53,8 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
   return (
     <>
       {renderButton()}
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        {children(() => setIsOpen(false))}
+      <Dialog open={isOpen} onClose={handleClose}>
+        {children(handleClose)}
       </Dialog>
     </>
   );

@@ -103,7 +103,12 @@ const TasksTable: FC<TasksTableProps> = ({
                       <IconButton onClick={() => onEdit(task.id)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => onDelete(task.id)}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(task.id);
+                        }}
+                      >
                         <BackspaceIcon />
                       </IconButton>
                     </Box>

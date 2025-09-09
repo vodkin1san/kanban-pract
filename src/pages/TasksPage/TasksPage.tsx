@@ -5,8 +5,6 @@ import {
   TablePagination,
   CircularProgress,
   Alert,
-  Button,
-  Dialog,
 } from "@mui/material";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
@@ -14,16 +12,16 @@ import {
   fetchTask,
   selectAllTasks,
   deleteTask,
+  selectTaskById,
 } from "@src/store/tasks/taskSlice";
 import { selectUserId } from "@store/selectors";
 import { fetchColumn, selectAllColumns } from "@store/columnSlice";
 import { useTranslation } from "react-i18next";
 import { TasksTable } from "@pages/TasksPage/TasksTable";
 import CreateTaskForm from "../HomePage/CreateTaskForm";
+import { ModalWrapper } from "@modules/columns/ModalWrapper";
 
 const TasksPage = () => {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const userId = useAppSelector(selectUserId);
   const tasks = useAppSelector(selectAllTasks);
@@ -36,7 +34,12 @@ const TasksPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+  const selectedTask = useAppSelector((state) =>
+    selectedTaskId ? selectTaskById(state, selectedTaskId) : undefined,
+  );
 
   useEffect(() => {
     if (userId) {
@@ -49,7 +52,6 @@ const TasksPage = () => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
-
     return () => {
       clearTimeout(timer);
     };
@@ -77,16 +79,16 @@ const TasksPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false);
-    setSelectedTaskId(null);
-  };
-
   const handleConfirmDelete = () => {
     if (selectedTaskId) {
       dispatch(deleteTask(selectedTaskId));
     }
     setIsDeleteModalOpen(false);
+    setSelectedTaskId(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
     setSelectedTaskId(null);
   };
 
@@ -131,41 +133,18 @@ const TasksPage = () => {
         {t("tasks:myTasksTitle")}
       </Typography>
       <Box sx={{ mb: 2 }}>
-        <Button variant="contained" onClick={() => setIsCreateModalOpen(true)}>
-          {t("tasks:addCard")}
-        </Button>
+        <ModalWrapper openButtonText={t("tasks:addCard")}>
+          {(onClose) => (
+            <CreateTaskForm
+              columnId={null}
+              onCancel={onClose}
+              onSuccess={onClose}
+              userId={userId || ""}
+              columns={columns}
+            />
+          )}
+        </ModalWrapper>
       </Box>
-      {userId ? (
-        <>
-          <Dialog
-            open={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
-          >
-            <CreateTaskForm
-              columnId={null}
-              onCancel={() => setIsCreateModalOpen(false)}
-              onSuccess={() => setIsCreateModalOpen(false)}
-              userId={userId}
-              columns={columns}
-            />
-          </Dialog>
-
-          <Dialog open={isEditModalOpen} onClose={handleCloseEditModal}>
-            <CreateTaskForm
-              taskId={selectedTaskId || undefined}
-              onCancel={handleCloseEditModal}
-              onSuccess={handleCloseEditModal}
-              userId={userId}
-              columns={columns}
-              columnId={null}
-            />
-          </Dialog>
-        </>
-      ) : (
-        <Alert severity="warning" sx={{ mt: 2 }}>
-          {t("auth:notAuthorized")}
-        </Alert>
-      )}
       <Box sx={{ mb: 2 }}>
         <TextField
           fullWidth
@@ -175,17 +154,38 @@ const TasksPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </Box>
-
-      <TasksTable
-        tasks={currentTasks}
-        columns={columns}
-        userId={userId}
-        onDelete={handleDeleteClick}
-        onEdit={handleEditClick}
-        isDeleteModalOpen={isDeleteModalOpen}
-        onConfirmDelete={handleConfirmDelete}
-        onCloseDeleteModal={() => setIsDeleteModalOpen(false)}
-      />
+      {userId ? (
+        <>
+          {isEditModalOpen && selectedTask && (
+            <ModalWrapper openInitially={true} onClose={handleCloseEditModal}>
+              {(onClose) => (
+                <CreateTaskForm
+                  taskId={selectedTaskId || undefined}
+                  onCancel={onClose}
+                  onSuccess={onClose}
+                  userId={userId}
+                  columns={columns}
+                  columnId={selectedTask.columnId || null}
+                />
+              )}
+            </ModalWrapper>
+          )}
+          <TasksTable
+            tasks={currentTasks}
+            columns={columns}
+            userId={userId}
+            onDelete={handleDeleteClick}
+            onEdit={handleEditClick}
+            isDeleteModalOpen={isDeleteModalOpen}
+            onConfirmDelete={handleConfirmDelete}
+            onCloseDeleteModal={() => setIsDeleteModalOpen(false)}
+          />
+        </>
+      ) : (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          {t("auth:notAuthorized")}
+        </Alert>
+      )}
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

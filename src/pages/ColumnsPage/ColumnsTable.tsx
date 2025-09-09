@@ -113,7 +113,12 @@ const ColumnsTable: FC<ColumnsTableProps> = ({
                       <IconButton onClick={() => onEdit(column.id)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => onDelete(column.id)}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(column.id);
+                        }}
+                      >
                         <BackspaceIcon />
                       </IconButton>
                     </Box>
