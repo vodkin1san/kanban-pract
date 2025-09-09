@@ -63,6 +63,7 @@ const TasksTable: FC<TasksTableProps> = ({
             <TableRow>
               <TableCell>{t("tasks:title")}</TableCell>
               <TableCell>{t("tasks:description")}</TableCell>
+              <TableCell>{t("tasks:createAt")}</TableCell>
               <TableCell>{t("tasks:dueDate")}</TableCell>
               <TableCell>{t("tasks:column")}</TableCell>
               <TableCell></TableCell>
@@ -81,6 +82,7 @@ const TasksTable: FC<TasksTableProps> = ({
                 >
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{task.description}</TableCell>
+                  <TableCell>{formatDate(task.createAt)}</TableCell>
                   <TableCell>{formatDate(task.dueDate)}</TableCell>
                   <TableCell>
                     {task.columnId

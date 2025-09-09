@@ -17,6 +17,7 @@
   "searchPlaceholder": "Search tasks...",
   "title": "Title",
   "description": "Description",
+  "createAt": "Creare Data",
   "dueDate": "Due Date",
   "column": "Column",
   "noColumn": "No column",

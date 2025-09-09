@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   description: string | null;
-  createAt: string;
+  createAt: string | null;
   dueDate: string | null;
   columnId: string | null;
   userId: string;
@@ -35,6 +35,7 @@ export interface TaskState {
 export interface CreateTaskPayload {
   title: string;
   description: string | null;
+  createAt: string | null;
   dueDate: string | null;
   columnId: string | null;
   userId: string;

@@ -57,6 +57,18 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+  const formatDateForInput = (
+    dateString: string | null | undefined,
+  ): string => {
+    if (!dateString) {
+      return "";
+    }
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const {
     handleSubmit,
@@ -67,7 +79,10 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
     defaultValues: {
       title: taskToEdit?.title || "",
       description: taskToEdit?.description || null,
-      dueDate: taskToEdit?.dueDate || getFormattedDate(new Date()),
+      createAt: taskId
+        ? formatDateForInput(taskToEdit?.createAt)
+        : getFormattedDate(new Date()),
+      dueDate: formatDateForInput(taskToEdit?.dueDate) || null,
       order: order || 0,
       columnId: taskId ? taskToEdit?.columnId || null : columnId || null,
     },
@@ -82,6 +97,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
           changes: {
             title: data.title,
             description: data.description,
+            createAt: data.createAt,
             dueDate: data.dueDate,
             order: taskToEdit?.order,
             columnId: data.columnId,
@@ -95,6 +111,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
           columnId: data.columnId,
           title: data.title,
           description: data.description,
+          createAt: getFormattedDate(new Date()),
           dueDate: data.dueDate,
           order: data.order,
         }),
@@ -195,6 +212,32 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
               error={!!errors.description}
               helperText={errors.description?.message}
               disabled={isCreatingTask}
+            />
+          )}
+        />
+        <Controller
+          name="createAt"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              fullWidth
+              label={t("tasks:createAt")}
+              id="createAt"
+              type="date"
+              value={field.value || ""}
+              error={!!errors.createAt}
+              helperText={
+                errors.createAt?.message
+                  ? t(`tasks:validation.${errors.createAt.message}`)
+                  : undefined
+              }
+              disabled={isCreatingTask}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
             />
           )}
         />

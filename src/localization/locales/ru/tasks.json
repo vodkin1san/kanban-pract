@@ -17,6 +17,7 @@
   "searchPlaceholder": "Поиск задач...",
   "title": "Название",
   "description": "Описание",
+  "createAt": "Дата создания",
   "dueDate": "Дата выполнения",
   "column": "Колонка",
   "noColumn": "Без колонки",
