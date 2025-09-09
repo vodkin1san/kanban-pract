@@ -129,6 +129,7 @@ const ColumnsTable: FC<ColumnsTableProps> = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t("common:rowsPerPage")}
       />
     </>
   );

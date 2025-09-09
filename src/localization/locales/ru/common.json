@@ -12,5 +12,6 @@
   "languageEnglish": "Английский",
   "languageRussian": "Русский",
   "home": "Главная",
-  "delete": "Удалить"
+  "delete": "Удалить",
+  "rowsPerPage": "Строк на странице:"
 }

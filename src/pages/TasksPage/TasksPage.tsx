@@ -184,6 +184,7 @@ const TasksPage = () => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t("common:rowsPerPage")}
       />
     </Box>
   );
